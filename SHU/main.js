@@ -2,10 +2,15 @@ var SCREEN_WIDTH = 1136;              // スクリーン幅
 var SCREEN_HEIGHT = 640;              // スクリーン高さ
 var SCREEN_CENTER_X = SCREEN_WIDTH / 2;   // スクリーン幅の半分
 var SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;  // スクリーン高さの半分
+var POINT_RATIO_X1_ZONE = SCREEN_CENTER_X;   // 得点1倍ゾーン
+var POINT_RATIO_X2_ZONE = SCREEN_CENTER_X / 2;   // 得点2倍ゾーン
+var POINT_RATIO_X3_ZONE = SCREEN_CENTER_X / 4;   // 得点3倍ゾーン
+
 var FONT_FAMILY = "'Press Start 2P','Meiryo',sans-serif";
 var ASSETS = {
     "player": "./resource/angus_128_anim.png",
-    "shuriken": "./resource/shuriken.png",
+    "pl_shuriken": "./resource/shuriken.png",
+    "ene_shuriken": "./resource/shuriken.png",
 
     "utena1": "./resource/utena1.png",
     "utena2": "./resource/utena2.png",
@@ -158,9 +163,10 @@ var group2 = null;
 var player = null;
 var plShurikenArray = [];
 var enemyArray = [];
+var eneShurikenArray = [];
 var uidCounter = 0;
 var nowScore = 0;
-var shurikenLeft = 10;
+var shurikenLeft = 50;
 
 tm.main(function () {
     // アプリケーションクラスを生成
@@ -235,9 +241,9 @@ tm.define("TitleScene", {
                     x: SCREEN_CENTER_X,
                     y: 320,
                     fillStyle: "#fff",
-                    fontSize: 32,
+                    fontSize: 64,
                     fontFamily: FONT_FAMILY,
-                    text: "SHURIKEN NAGE-NAGE\n~U.v.U.2~",
+                    text: "SHRKN NG-NG\n~U.v.U.2~",
                     align: "center",
                 },
                 {
@@ -366,14 +372,14 @@ tm.define("GameScene", {
                         {
                             text: "⬆",
                             fontFamily: FONT_FAMILY,
-                            fontSize: 32,
-                            width: 64,
-                            height: 64,
+                            fontSize: 64,
+                            width: 128,
+                            height: 128,
                             bgColor: "hsl(0, 100%, 50%)",
                         }
                     ],
                     x: 128,
-                    y: 530,
+                    y: 400,
                     alpha: 0.0,
                 },
                 {
@@ -382,14 +388,14 @@ tm.define("GameScene", {
                         {
                             text: "⬇",
                             fontFamily: FONT_FAMILY,
-                            fontSize: 32,
-                            width: 64,
-                            height: 64,
+                            fontSize: 64,
+                            width: 128,
+                            height: 128,
                             bgColor: "hsl(0, 100%, 50%)",
                         }
                     ],
                     x: 128,
-                    y: 600,
+                    y: 550,
                     alpha: 0.0,
                 },
                 {
@@ -398,19 +404,19 @@ tm.define("GameScene", {
                         {
                             text: "A",
                             fontFamily: FONT_FAMILY,
-                            fontSize: 32,
-                            width: 64,
-                            height: 64,
+                            fontSize: 64,
+                            width: 128,
+                            height: 128,
                             bgColor: "hsl(0, 100%, 50%)",
                         }
                     ],
                     x: 1136 - 128,
-                    y: 600,
+                    y: 550,
                     alpha: 0.0,
                 },
             ]
         });
-        this.shurikenLeftSprite = tm.display.Sprite("shuriken").addChildTo(group2);
+        this.shurikenLeftSprite = tm.display.Sprite("pl_shuriken").addChildTo(group2);
         this.shurikenLeftSprite.setPosition(SCREEN_WIDTH - 128, 80);
 
         this.tweetButton.sleep();
@@ -450,7 +456,7 @@ tm.define("GameScene", {
         this.buttonAlpha = 0.0;
 
         nowScore = 0;
-        shurikenLeft = 10;
+        shurikenLeft = 50;
         this.frame = 0;
         this.enemyCount = 0;
 
@@ -463,9 +469,9 @@ tm.define("GameScene", {
         if (!player.status.isStart) {
             this.startLabel.remove();
 
-            this.upButton.setAlpha(0.7);
-            this.downButton.setAlpha(0.7);
-            this.aButton.setAlpha(0.7);
+            this.upButton.setAlpha(0.4);
+            this.downButton.setAlpha(0.4);
+            this.aButton.setAlpha(0.4);
 
             this.upButton.wakeUp();
             this.downButton.wakeUp();
@@ -479,19 +485,15 @@ tm.define("GameScene", {
             if (player.status.isStart) {
                 this.frame++;
                 this.tmpSec = Math.floor(this.frame / app.fps);
-                if (this.tmpSec > 60) this.frame = 0; // 170で１周する
+                if (this.tmpSec > 60) this.frame = 0;
 
                 if (this.frame % 60 === 0) {
                     this.enemyNum = -1;
                     // 敵発生数の決定
                     if (this.tmpSec < 30) {
                         this.enemyNum = 1;
-                    } else if (this.tmpSec < 60) {
-                        if (tm.util.Random.randint(1, 2) <= 1) this.enemyNum = 2;
-                        else this.enemyNum = 1;
                     } else {
-                        if (tm.util.Random.randint(1, 10) <= 1) this.enemyNum = 3;
-                        else if (tm.util.Random.randint(1, 3) <= 2) this.enemyNum = 2;
+                        if (tm.util.Random.randint(1, 10) <= 1) this.enemyNum = 2;
                         else this.enemyNum = 1;
                     }
 
@@ -531,6 +533,7 @@ tm.define("GameScene", {
 
             // 当たり判定
             checkPlShurikenToEnemy();
+            checkEneShurikenToPlayer();
         } else {
             if (!this.stopBGM) {
                 //	            tm.asset.AssetManager.get("fallSE").clone().play();
@@ -636,7 +639,7 @@ tm.define("PlayerShuriken", {
     superClass: "tm.app.Sprite",
 
     init: function (uid, yPos) {
-        this.superInit("shuriken", 32, 32);
+        this.superInit("pl_shuriken", 32, 32);
         this.uid = uid;
         this.direct = '';
         this.zRot = 0;
@@ -648,7 +651,7 @@ tm.define("PlayerShuriken", {
 
     update: function (app) {
         if (player.status.isDead) return;
-        this.x += 10;
+        this.x += 20;
         this.zRot += 20;
         this.rotation = this.zRot;
     },
@@ -671,34 +674,46 @@ tm.define("Enemy", {
                 this.shuriken = 2;
                 this.xSpd = -5;
                 this.life = 1;
-                this.moveCounterLimit = 0;
+                this.laneChangeCounterLimit = 0;
+                this.laneChangeCounter = 0;
+                this.attackCounterLimit = 120;
+                this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 1:
                 // 早い
                 this.spriteName = "utena2";
                 this.point = 2;
                 this.shuriken = 2;
-                this.xSpd = -10;
+                this.xSpd = -7;
                 this.life = 1;
-                this.moveCounterLimit = 0;
+                this.laneChangeCounterLimit = 0;
+                this.laneChangeCounter = 0;
+                this.attackCounterLimit = 90;
+                this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 2:
                 // 頻繁にレーンチェンジ
                 this.spriteName = "utena7";
                 this.point = 3;
                 this.shuriken = 5;
-                this.xSpd = -10;
+                this.xSpd = -7;
                 this.life = 1;
-                this.moveCounterLimit = 10;
+                this.laneChangeCounterLimit = 15;
+                this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
+                this.attackCounterLimit = 60;
+                this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 3:
                 // 固くて遅い
                 this.spriteName = "utena1";
                 this.point = 4;
-                this.shuriken = 10;
+                this.shuriken = 15;
                 this.xSpd = -3;
                 this.life = 5;
-                this.moveCounterLimit = 0;
+                this.laneChangeCounterLimit = 0;
+                this.laneChangeCounter = 0;
+                this.attackCounterLimit = 60;
+                this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 4:
                 // 稀にレーンチェンジ
@@ -707,17 +722,27 @@ tm.define("Enemy", {
                 this.shuriken = 5;
                 this.xSpd = -5;
                 this.life = 3;
-                this.moveCounterLimit = 15;
+                this.laneChangeCounterLimit = 30;
+                this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
+                this.attackCounterLimit = 0;
+                this.attackCounter = 0;
                 break;
             case 5:
                 // 手裏剣に当たるとレーンチェンジ
                 this.spriteName = "utena3";
                 this.point = 6;
                 this.shuriken = 10;
-                this.xSpd = -10;
+                this.xSpd = -7;
                 this.life = 3;
-                this.moveCounterLimit = 0;
+                this.laneChangeCounterLimit = 0;
+                this.laneChangeCounter = 0;
+                this.attackCounterLimit = 0;
+                this.attackCounter = 0;
                 break;
+            default:
+                console.log('Unknown enemy kind');
+                break;
+
         }
         this.superInit(this.spriteName, 128, 128);
         this.direct = '';
@@ -740,6 +765,7 @@ tm.define("Enemy", {
         if (player.status.isDead) return;
         if (this.status.isDead) return;
 
+        // 移動
         switch (this.kind) {
             case 0:
             case 1:
@@ -763,12 +789,12 @@ tm.define("Enemy", {
                 } else {
                     this.vec.x = this.xSpd;
                     this.position.add(this.vec);
-                    if (++this.counter > 30) {
-                        this.counter = 0;
+                    if (++this.laneChangeCounter > this.laneChangeCounterLimit) {
+                        this.laneChangeCounter = 0;
+                        this.moveCounter = 0;
                         if (this.nowFloor == 0) {
                             this.nextFloor = 1;
                             this.status = EN_STATUS.MOVE_UP;
-                            this.moveCounter = 0;
                         }
                         if (this.nowFloor == 1) {
                             if (tm.util.Random.randint(0, 1) == 0) {
@@ -778,12 +804,10 @@ tm.define("Enemy", {
                                 this.nextFloor = 0;
                                 this.status = EN_STATUS.MOVE_DOWN;
                             }
-                            this.moveCounter = 0;
                         }
                         if (this.nowFloor == 2) {
                             this.nextFloor = 1;
                             this.status = EN_STATUS.MOVE_DOWN;
-                            this.moveCounter = 0;
                         }
                     }
                 }
@@ -805,10 +829,10 @@ tm.define("Enemy", {
                     this.position.add(this.vec);
                     if (this.isHit) {
                         this.isHit = Boolean(0);
+                        this.moveCounter = 0;
                         if (this.nowFloor == 0) {
                             this.nextFloor = 1;
                             this.status = EN_STATUS.MOVE_UP;
-                            this.moveCounter = 0;
                         }
                         if (this.nowFloor == 1) {
                             if (tm.util.Random.randint(0, 1) == 0) {
@@ -818,15 +842,45 @@ tm.define("Enemy", {
                                 this.nextFloor = 0;
                                 this.status = EN_STATUS.MOVE_DOWN;
                             }
-                            this.moveCounter = 0;
                         }
                         if (this.nowFloor == 2) {
                             this.nextFloor = 1;
                             this.status = EN_STATUS.MOVE_DOWN;
-                            this.moveCounter = 0;
                         }
                     }
                 }
+                break;
+            default:
+                console.log('Unknown enemy kind');
+                break;
+        }
+
+        // 攻撃
+        switch (this.kind) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                if (this.status === EN_STATUS.MOVE_FORWARD) {
+                    if (++this.attackCounter > this.attackCounterLimit) {
+                        this.attackCounter = 0;
+                        var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
+                        eneShu.addChildTo(group1);
+                        eneShurikenArray.push(eneShu);
+                    }
+                }
+                break;
+            case 4:
+            case 5:
+                if ((this.status === EN_STATUS.MOVE_UP) || (this.status === EN_STATUS.MOVE_DOWN)) {
+                    if (this.moveCounter == 0) {
+                        var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
+                        eneShu.addChildTo(group1);
+                        eneShurikenArray.push(eneShu);
+                    }
+                }
+            default:
+                console.log('Unknown enemy kind');
                 break;
         }
 
@@ -839,19 +893,48 @@ tm.define("Enemy", {
     },
 });
 
+/*
+ * EnemyShuriken
+ */
+tm.define("EnemyShuriken", {
+    superClass: "tm.app.Sprite",
+
+    init: function (uid, xPos, yPos) {
+        this.superInit("ene_shuriken", 32, 32);
+        this.uid = uid;
+        this.direct = '';
+        this.zRot = 0;
+        this.setPosition(xPos - 32, yPos).setScale(1, 1);
+        this.setInteractive(false);
+        this.setBoundingType("rect");
+        this.isDead = Boolean(0);
+    },
+
+    update: function (app) {
+        if (player.status.isDead) return;
+        this.x -= 10;
+        this.zRot -= 20;
+        this.rotation = this.zRot;
+    },
+});
+
+// プレイヤー手裏剣と敵との当たり判定
 function checkPlShurikenToEnemy() {
     var self = this;
-    var deadShuriken = [];
+    var deadPlShuriken = [];
     var deadEnemy = [];
+    var deadEneShuriken = [];
 
     for (var ii = 0; ii < self.plShurikenArray.length; ii++) {
         var tmpShu = self.plShurikenArray[ii];
+
+        // 敵との当たり判定
         for (var jj = 0; jj < self.enemyArray.length; jj++) {
             var tmpEne = self.enemyArray[jj];
+            if (tmpEne.x >= SCREEN_WIDTH - 16) continue; // 画面外では当たらない
             if (tmpShu.isHitElement(tmpEne)) {
-                console.log("hit!!");
                 tmpShu.isDead = Boolean(1);
-                deadShuriken.push(tmpShu);
+                deadPlShuriken.push(tmpShu);
                 if (!tmpEne.status.isDead) {
                     tmpEne.isHit = Boolean(1);
                     if (--tmpEne.life <= 0) {
@@ -861,28 +944,76 @@ function checkPlShurikenToEnemy() {
                 }
             }
         }
+
+        // 敵手裏剣との当たり判定
+        if (!tmpShu.isDead) {
+            for (var jj = 0; jj < self.eneShurikenArray.length; jj++) {
+                var tmpEneShu = self.eneShurikenArray[jj];
+                if (tmpEneShu.x >= SCREEN_WIDTH - 16) continue; // 画面外では当たらない
+                if (tmpShu.isHitElement(tmpEneShu)) {
+                    tmpShu.isDead = Boolean(1);
+                    deadPlShuriken.push(tmpShu);
+                    if (!tmpEneShu.isDead) {
+                        tmpEneShu.isDead = Boolean(1);
+                        deadEneShuriken.push(tmpEneShu);
+                    }
+                }
+            }
+        }
+
         // 画面右端から出た？
         if (!tmpShu.isDead) {
             if (tmpShu.x > SCREEN_WIDTH) {
-                console.log("out!!");
-                deadShuriken.push(tmpShu);
+                deadPlShuriken.push(tmpShu);
             }
         }
     }
 
-    // 削除対象の機雷と敵を削除
-    for (var ii = 0; ii < deadShuriken.length; ii++) {
-        if (deadShuriken[ii].parent == null) {
+    // 削除対象の手裏剣を削除
+    for (var ii = 0; ii < deadPlShuriken.length; ii++) {
+        if (deadPlShuriken[ii].parent == null) {
             console.log("NULL!!");
             continue;
         }
-        deadShuriken[ii].remove();
-        self.plShurikenArray.erase(deadShuriken[ii]);
+        deadPlShuriken[ii].remove();
+        self.plShurikenArray.erase(deadPlShuriken[ii]);
     }
+    // 削除対象の敵を削除
     for (var ii = 0; ii < deadEnemy.length; ii++) {
-        nowScore += deadEnemy[ii].point;
+        if (deadEnemy[ii].x > POINT_RATIO_X1_ZONE) nowScore += deadEnemy[ii].point; // 得点1倍ゾーン
+        else if (deadEnemy[ii].x > POINT_RATIO_X2_ZONE) nowScore += deadEnemy[ii].point * 2; // 得点2倍ゾーン
+        else if (deadEnemy[ii].x > POINT_RATIO_X3_ZONE) nowScore += deadEnemy[ii].point * 3; // 得点3倍ゾーン
+        else nowScore += deadEnemy[ii].point * 4; // 得点4倍ゾーン
         shurikenLeft += deadEnemy[ii].shuriken;
         deadEnemy[ii].remove();
         self.enemyArray.erase(deadEnemy[ii]);
     }
+    // 削除対象の敵手裏剣を削除
+    for (var ii = 0; ii < deadEneShuriken.length; ii++) {
+        deadEneShuriken[ii].remove();
+        self.eneShurikenArray.erase(deadEneShuriken[ii]);
+    }
 }
+
+// 敵手裏剣とプレイヤーとの当たり判定
+function checkEneShurikenToPlayer() {
+    if (player.status == PL_STATUS.DEAD) return;
+
+    var self = this;
+    for (var ii = 0; ii < self.eneShurikenArray.length; ii++) {
+        var tmpEneShu = self.eneShurikenArray[ii];
+        if (player.isHitElement(tmpEneShu)) {
+            if (abs(player.x - tmpEneShu.x) < 32) {
+                console.log("hit!!");
+                player.status = PL_STATUS.DEAD;
+                break;
+            }
+        }
+    }
+}
+
+function abs(val) {
+    return val < 0 ? -val : val;
+}
+
+
