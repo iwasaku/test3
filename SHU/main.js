@@ -459,6 +459,8 @@ tm.define("GameScene", {
 
         nowScore = 0;
         shurikenLeft = 50;
+        totalFrame = 0;
+
         this.frame = 0;
         this.enemyCount = 0;
 
@@ -547,7 +549,7 @@ tm.define("GameScene", {
                 this.tweetButton.onclick = function () {
                     var twitterURL = tm.social.Twitter.createURL({
                         type: "tweet",
-                        text: "U.v.U.2 スコア: " + self.resultScoreLabel.text,
+                        text: "U.v.U.2 スコア: " + self.nowScoreLabel.text,
                         hashtags: ["ネムレス", "NEMLESSS"],
                         url: "https://iwasaku.github.io/test3/SHU/index.html",
                     });
