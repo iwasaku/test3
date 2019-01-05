@@ -684,7 +684,7 @@ tm.define("Enemy", {
                 // 早い
                 this.spriteName = "utena2";
                 this.point = 2;
-                this.shuriken = 2;
+                this.shuriken = 5;
                 this.xSpd = -7;
                 this.life = 1;
                 this.laneChangeCounterLimit = 0;
@@ -699,7 +699,7 @@ tm.define("Enemy", {
                 this.shuriken = 5;
                 this.xSpd = -7;
                 this.life = 1;
-                this.laneChangeCounterLimit = 15;
+                this.laneChangeCounterLimit = 30;
                 this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
                 this.attackCounterLimit = 60;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
@@ -708,22 +708,22 @@ tm.define("Enemy", {
                 // 固くて遅い
                 this.spriteName = "utena1";
                 this.point = 4;
-                this.shuriken = 15;
+                this.shuriken = 20;
                 this.xSpd = -3;
                 this.life = 5;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
-                this.attackCounterLimit = 60;
+                this.attackCounterLimit = 180;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 4:
                 // 稀にレーンチェンジ
                 this.spriteName = "utena6";
                 this.point = 5;
-                this.shuriken = 5;
+                this.shuriken = 10;
                 this.xSpd = -5;
                 this.life = 3;
-                this.laneChangeCounterLimit = 30;
+                this.laneChangeCounterLimit = 60;
                 this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
                 this.attackCounterLimit = 0;
                 this.attackCounter = 0;
@@ -732,7 +732,7 @@ tm.define("Enemy", {
                 // 手裏剣に当たるとレーンチェンジ
                 this.spriteName = "utena3";
                 this.point = 6;
-                this.shuriken = 10;
+                this.shuriken = 15;
                 this.xSpd = -7;
                 this.life = 3;
                 this.laneChangeCounterLimit = 0;
