@@ -167,6 +167,7 @@ var eneShurikenArray = [];
 var uidCounter = 0;
 var nowScore = 0;
 var shurikenLeft = 50;
+var totalFrame = 0;
 
 tm.main(function () {
     // アプリケーションクラスを生成
@@ -485,10 +486,11 @@ tm.define("GameScene", {
         if (!player.status.isDead) {
             if (player.status.isStart) {
                 this.frame++;
+                totalFrame++;
                 this.tmpSec = Math.floor(this.frame / app.fps);
                 if (this.tmpSec > 60) this.frame = 0;
 
-                if (this.frame % 60 === 0) {
+                if (totalFrame % 60 === 0) {
                     this.enemyNum = -1;
                     // 敵発生数の決定
                     if (this.tmpSec < 30) {
@@ -697,7 +699,7 @@ tm.define("Enemy", {
                 this.spriteName = "utena7";
                 this.point = 3;
                 this.shuriken = 5;
-                this.xSpd = -7;
+                this.xSpd = -6;
                 this.life = 1;
                 this.laneChangeCounterLimit = 30;
                 this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
@@ -709,7 +711,7 @@ tm.define("Enemy", {
                 this.spriteName = "utena1";
                 this.point = 4;
                 this.shuriken = 20;
-                this.xSpd = -3;
+                this.xSpd = -1;
                 this.life = 5;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
@@ -721,8 +723,8 @@ tm.define("Enemy", {
                 this.spriteName = "utena6";
                 this.point = 5;
                 this.shuriken = 10;
-                this.xSpd = -5;
-                this.life = 3;
+                this.xSpd = -3;
+                this.life = 2;
                 this.laneChangeCounterLimit = 60;
                 this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
                 this.attackCounterLimit = 0;
@@ -733,8 +735,8 @@ tm.define("Enemy", {
                 this.spriteName = "utena3";
                 this.point = 6;
                 this.shuriken = 15;
-                this.xSpd = -7;
-                this.life = 3;
+                this.xSpd = -4;
+                this.life = 2;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
                 this.attackCounterLimit = 0;
@@ -857,32 +859,34 @@ tm.define("Enemy", {
         }
 
         // 攻撃
-        switch (this.kind) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                if (this.status === EN_STATUS.MOVE_FORWARD) {
-                    if (++this.attackCounter > this.attackCounterLimit) {
-                        this.attackCounter = 0;
-                        var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
-                        eneShu.addChildTo(group1);
-                        eneShurikenArray.push(eneShu);
+        if (Math.floor(totalFrame / app.fps) > 60) {
+            switch (this.kind) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    if (this.status === EN_STATUS.MOVE_FORWARD) {
+                        if (++this.attackCounter > this.attackCounterLimit) {
+                            this.attackCounter = 0;
+                            var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
+                            eneShu.addChildTo(group1);
+                            eneShurikenArray.push(eneShu);
+                        }
                     }
-                }
-                break;
-            case 4:
-            case 5:
-                if ((this.status === EN_STATUS.MOVE_UP) || (this.status === EN_STATUS.MOVE_DOWN)) {
-                    if (this.moveCounter == 0) {
-                        var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
-                        eneShu.addChildTo(group1);
-                        eneShurikenArray.push(eneShu);
+                    break;
+                case 4:
+                case 5:
+                    if ((this.status === EN_STATUS.MOVE_UP) || (this.status === EN_STATUS.MOVE_DOWN)) {
+                        if (this.moveCounter == 0) {
+                            var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
+                            eneShu.addChildTo(group1);
+                            eneShurikenArray.push(eneShu);
+                        }
                     }
-                }
-            default:
-                console.log('Unknown enemy kind');
-                break;
+                default:
+                    console.log('Unknown enemy kind');
+                    break;
+            }
         }
 
         // 画面左端から出た?
