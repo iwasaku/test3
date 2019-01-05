@@ -297,6 +297,7 @@ tm.define("GameScene", {
         this.bgFloor2 = tm.display.Sprite("bg_yuka_2").addChildTo(group0);
         this.bgFloor2.setPosition(SCREEN_CENTER_X, 150 - 55);
 
+        clearArrays();
         player = new Player().addChildTo(group1);
 
         this.fromJSON({
@@ -971,11 +972,8 @@ function checkPlShurikenToEnemy() {
 
     // 削除対象の手裏剣を削除
     for (var ii = 0; ii < deadPlShuriken.length; ii++) {
-        if (deadPlShuriken[ii].parent == null) {
-            console.log("NULL!!");
-            continue;
-        }
-        deadPlShuriken[ii].remove();
+        if (deadPlShuriken[ii].parent == null) console.log("NULL!!");
+        else deadPlShuriken[ii].remove();
         self.plShurikenArray.erase(deadPlShuriken[ii]);
     }
     // 削除対象の敵を削除
@@ -1005,6 +1003,7 @@ function checkEneShurikenToPlayer() {
         if (player.isHitElement(tmpEneShu)) {
             if (abs(player.x - tmpEneShu.x) < 32) {
                 console.log("hit!!");
+
                 player.status = PL_STATUS.DEAD;
                 break;
             }
@@ -1012,8 +1011,33 @@ function checkEneShurikenToPlayer() {
     }
 }
 
+function clearArrays() {
+    var self = this;
+
+    for (var ii = self.plShurikenArray.length - 1; ii >= 0; ii--) {
+        var tmp = self.plShurikenArray[ii];
+        if (tmp.parent == null) console.log("NULL!!");
+        else tmp.remove();
+        self.plShurikenArray.erase(tmp);
+    }
+
+    for (var ii = self.enemyArray.length - 1; ii >= 0; ii--) {
+        var tmp = self.enemyArray[ii];
+        if (tmp.parent == null) console.log("NULL!!");
+        else tmp.remove();
+        self.enemyArray.erase(tmp);
+    }
+
+    for (var ii = self.eneShurikenArray.length - 1; ii >= 0; ii--) {
+        var tmp = self.eneShurikenArray[ii];
+        if (tmp.parent == null) console.log("NULL!!");
+        else tmp.remove();
+        self.eneShurikenArray.erase(tmp);
+    }
+}
+
+// 絶対値を返す関数
+// https://iwb.jp/javascript-math-abs-deprecated/
 function abs(val) {
     return val < 0 ? -val : val;
 }
-
-
