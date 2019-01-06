@@ -24,7 +24,8 @@ var ASSETS = {
     "bg_yuka_1": "./resource/bg_yuka_1.png",
     "bg_yuka_2": "./resource/bg_yuka_2.png",
 
-    //    "fallSE":         "./resource/fall.mp3",
+    "fallSE": "https://iwasaku.github.io/test3/SHU/resource/fall.mp3",    // 開発時用（mp3はfile://でのアクセスが拒否されるので、https://経由にする）
+    //"fallSE": "./resource/fall.mp3",
 };
 
 // 定義
@@ -541,7 +542,7 @@ tm.define("GameScene", {
             checkEneShurikenToPlayer();
         } else {
             if (!this.stopBGM) {
-                //	            tm.asset.AssetManager.get("fallSE").clone().play();
+                tm.asset.AssetManager.get("fallSE").clone().play();
                 this.stopBGM = true;
 
                 var self = this;
