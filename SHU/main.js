@@ -678,7 +678,7 @@ tm.define("Enemy", {
                 this.spriteName = "utena5";
                 this.point = 1;
                 this.shuriken = 2;
-                this.xSpd = -5;
+                this.xSpd = -4;
                 this.life = 1;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
@@ -689,7 +689,7 @@ tm.define("Enemy", {
                 // 早い
                 this.spriteName = "utena2";
                 this.point = 2;
-                this.shuriken = 5;
+                this.shuriken = 2;
                 this.xSpd = -7;
                 this.life = 1;
                 this.laneChangeCounterLimit = 0;
@@ -718,7 +718,7 @@ tm.define("Enemy", {
                 this.life = 5;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
-                this.attackCounterLimit = 180;
+                this.attackCounterLimit = 120;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 4:
@@ -737,9 +737,9 @@ tm.define("Enemy", {
                 // 手裏剣に当たるとレーンチェンジ
                 this.spriteName = "utena3";
                 this.point = 6;
-                this.shuriken = 15;
-                this.xSpd = -4;
-                this.life = 2;
+                this.shuriken = 10;
+                this.xSpd = -5;
+                this.life = 3;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
                 this.attackCounterLimit = 0;
