@@ -463,7 +463,6 @@ tm.define("GameScene", {
         totalFrame = 0;
 
         this.frame = 0;
-        this.enemyCount = 0;
 
         this.stopBGM = false;
     },
@@ -491,15 +490,26 @@ tm.define("GameScene", {
                 this.frame++;
                 totalFrame++;
                 this.tmpSec = Math.floor(this.frame / app.fps);
+                var totalSec = Math.floor(totalFrame / app.fps);
                 if (this.tmpSec > 60) this.frame = 0;
 
                 if (totalFrame % 60 === 0) {
                     this.enemyNum = -1;
+                    var rnd = tm.util.Random.randint(1, 10);
                     // 敵発生数の決定
-                    if (this.tmpSec < 30) {
+                    if (totalSec < 30) {
                         this.enemyNum = 1;
+                    } else if (totalSec < 60) {
+                        if (rnd === 1) this.enemyNum = 2;
+                        else this.enemyNum = 1;
+                    } else if (totalSec < 90) {
+                        if (rnd === 1) this.enemyNum = 3;
+                        else if (rnd === 2) this.enemyNum = 2;
+                        else this.enemyNum = 1;
                     } else {
-                        if (tm.util.Random.randint(1, 10) <= 1) this.enemyNum = 2;
+                        if (rnd === 1) this.enemyNum = 4;
+                        else if (rnd === 2) this.enemyNum = 3;
+                        else if (rnd === 3) this.enemyNum = 2;
                         else this.enemyNum = 1;
                     }
 
@@ -522,7 +532,6 @@ tm.define("GameScene", {
                         enemy.addChildTo(group1);
                         enemyArray.push(enemy);
                     }, this);
-                    this.enemyCount++;
                 }
                 if (player.status === PL_STATUS.SHOT) {
                     if (++player.moveCounter >= 5) {
@@ -755,6 +764,7 @@ tm.define("Enemy", {
         this.setInteractive(false);
         this.setBoundingType("rect");
         this.moveCounter = 0;
+        this.mutekiCounter = 0;
         this.isHit = Boolean(0);
 
         this.uid = uid;
@@ -834,24 +844,27 @@ tm.define("Enemy", {
                     this.vec.x = this.xSpd;
                     this.position.add(this.vec);
                     if (this.isHit) {
-                        this.isHit = Boolean(0);
                         this.moveCounter = 0;
                         if (this.nowFloor == 0) {
                             this.nextFloor = 1;
                             this.status = EN_STATUS.MOVE_UP;
+                            this.mutekiCounter = 5;
                         }
                         if (this.nowFloor == 1) {
                             if (tm.util.Random.randint(0, 1) == 0) {
                                 this.nextFloor = 2;
                                 this.status = EN_STATUS.MOVE_UP;
+                                this.mutekiCounter = 5;
                             } else {
                                 this.nextFloor = 0;
                                 this.status = EN_STATUS.MOVE_DOWN;
+                                this.mutekiCounter = 10;
                             }
                         }
                         if (this.nowFloor == 2) {
                             this.nextFloor = 1;
                             this.status = EN_STATUS.MOVE_DOWN;
+                            this.mutekiCounter = 10;
                         }
                     }
                 }
@@ -860,6 +873,8 @@ tm.define("Enemy", {
                 console.log('Unknown enemy kind');
                 break;
         }
+        this.isHit = Boolean(0);
+        if (this.mutekiCounter > 0) this.mutekiCounter--;
 
         // 攻撃
         if (Math.floor(totalFrame / app.fps) > 60) {
@@ -939,33 +954,30 @@ function checkPlShurikenToEnemy() {
         // 敵との当たり判定
         for (var jj = 0; jj < self.enemyArray.length; jj++) {
             var tmpEne = self.enemyArray[jj];
-            if (tmpEne.x >= SCREEN_WIDTH - 16) continue; // 画面外では当たらない
-            if (tmpShu.isHitElement(tmpEne)) {
-                tmpShu.isDead = Boolean(1);
-                deadPlShuriken.push(tmpShu);
-                if (!tmpEne.status.isDead) {
-                    tmpEne.isHit = Boolean(1);
-                    if (--tmpEne.life <= 0) {
-                        tmpEne.status = EN_STATUS.DEAD;
-                        deadEnemy.push(tmpEne);
-                    }
-                }
-            }
+            if (tmpEne.x >= SCREEN_WIDTH - 8) continue; // そもそも画面外では当たらない
+            if (!tmpShu.isHitElement(tmpEne)) continue; // 当たってない
+            tmpShu.isDead = Boolean(1);
+            deadPlShuriken.push(tmpShu);
+            if (tmpEne.status.isDead) continue; // 既に死亡済み
+            if (tmpEne.isHit) continue; // 既に今回の当たり判定発生中
+            if (tmpEne.mutekiCounter > 0) continue; // 無敵中
+            tmpEne.isHit = Boolean(1);
+            if (--tmpEne.life >= 1) continue;   // 残ライフが1以上
+            tmpEne.status = EN_STATUS.DEAD;
+            deadEnemy.push(tmpEne);
         }
 
         // 敵手裏剣との当たり判定
         if (!tmpShu.isDead) {
             for (var jj = 0; jj < self.eneShurikenArray.length; jj++) {
                 var tmpEneShu = self.eneShurikenArray[jj];
-                if (tmpEneShu.x >= SCREEN_WIDTH - 16) continue; // 画面外では当たらない
-                if (tmpShu.isHitElement(tmpEneShu)) {
-                    tmpShu.isDead = Boolean(1);
-                    deadPlShuriken.push(tmpShu);
-                    if (!tmpEneShu.isDead) {
-                        tmpEneShu.isDead = Boolean(1);
-                        deadEneShuriken.push(tmpEneShu);
-                    }
-                }
+                if (tmpEneShu.x >= SCREEN_WIDTH - 16) continue; // そもそも画面外では当たらない
+                if (!tmpShu.isHitElement(tmpEneShu)) continue;  // 当たってない
+                tmpShu.isDead = Boolean(1);
+                deadPlShuriken.push(tmpShu);
+                if (tmpEneShu.isDead) continue; // 既に死亡済み
+                tmpEneShu.isDead = Boolean(1);
+                deadEneShuriken.push(tmpEneShu);
             }
         }
 
@@ -1007,17 +1019,14 @@ function checkEneShurikenToPlayer() {
     var self = this;
     for (var ii = 0; ii < self.eneShurikenArray.length; ii++) {
         var tmpEneShu = self.eneShurikenArray[ii];
-        if (player.isHitElement(tmpEneShu)) {
-            if (abs(player.x - tmpEneShu.x) < 32) {
-                console.log("hit!!");
-
-                player.status = PL_STATUS.DEAD;
-                break;
-            }
-        }
+        if (!player.isHitElement(tmpEneShu)) continue;  // 当たってない
+        if (abs(player.x - tmpEneShu.x) >= 32) continue;    // 見た目で当たってない距離
+        player.status = PL_STATUS.DEAD;
+        break;
     }
 }
 
+// 
 function clearArrays() {
     var self = this;
 
