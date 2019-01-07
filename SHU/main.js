@@ -169,7 +169,7 @@ var uidCounter = 0;
 var nowScore = 0;
 var shurikenLeft = 50;
 var totalFrame = 0;
-
+var totalSec = 0;
 tm.main(function () {
     // アプリケーションクラスを生成
     var app = tm.display.CanvasApp("#world");
@@ -488,10 +488,10 @@ tm.define("GameScene", {
         if (!player.status.isDead) {
             if (player.status.isStart) {
                 this.frame++;
-                totalFrame++;
                 this.tmpSec = Math.floor(this.frame / app.fps);
-                var totalSec = Math.floor(totalFrame / app.fps);
                 if (this.tmpSec > 60) this.frame = 0;
+                totalFrame++;
+                totalSec = Math.floor(totalFrame / app.fps);
 
                 if (totalFrame % 60 === 0) {
                     this.enemyNum = -1;
@@ -522,11 +522,20 @@ tm.define("GameScene", {
                         else if (this.tmpSec < 20) this.enemyKind = 3;
                         else if (this.tmpSec < 25) this.enemyKind = 4;
                         else if (this.tmpSec < 30) this.enemyKind = 5;
-                        else if (this.tmpSec < 35) this.enemyKind = tm.util.Random.randint(0, 1);
-                        else if (this.tmpSec < 40) this.enemyKind = tm.util.Random.randint(0, 2);
-                        else if (this.tmpSec < 45) this.enemyKind = tm.util.Random.randint(0, 3);
-                        else if (this.tmpSec < 50) this.enemyKind = tm.util.Random.randint(0, 4);
-                        else this.enemyKind = tm.util.Random.randint(0, 5);
+                        else if (this.tmpSec < 35) this.enemyKind = tm.util.Random.randint(0, 2);
+                        else if (this.tmpSec < 40) this.enemyKind = tm.util.Random.randint(2, 4);
+                        else if (this.tmpSec < 45) this.enemyKind = tm.util.Random.randint(3, 5);
+                        else if (this.tmpSec < 50) {
+                            var tmpRnd = tm.util.Random.randint(0, 2);
+                            if (tmpRnd == 0) this.enemyKind = 0;
+                            else if (tmpRnd == 1) this.enemyKind = 2;
+                            else this.enemyKind = 4;
+                        } else {
+                            var tmpRnd = tm.util.Random.randint(0, 2);
+                            if (tmpRnd == 0) this.enemyKind = 1;
+                            else if (tmpRnd == 1) this.enemyKind = 3;
+                            else this.enemyKind = 5;
+                        }
                         var enemy = Enemy(++uidCounter, this.enemyKind);
 
                         enemy.addChildTo(group1);
@@ -691,7 +700,7 @@ tm.define("Enemy", {
                 this.life = 1;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
-                this.attackCounterLimit = 120;
+                this.attackCounterLimit = (totalSec < 90) ? 120 : 80;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 1:
@@ -703,7 +712,7 @@ tm.define("Enemy", {
                 this.life = 1;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
-                this.attackCounterLimit = 90;
+                this.attackCounterLimit = (totalSec < 90) ? 90 : 60;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 2:
@@ -715,7 +724,7 @@ tm.define("Enemy", {
                 this.life = 1;
                 this.laneChangeCounterLimit = 30;
                 this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
-                this.attackCounterLimit = 60;
+                this.attackCounterLimit = (totalSec < 90) ? 60 : 40;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 3:
@@ -727,7 +736,7 @@ tm.define("Enemy", {
                 this.life = 5;
                 this.laneChangeCounterLimit = 0;
                 this.laneChangeCounter = 0;
-                this.attackCounterLimit = 120;
+                this.attackCounterLimit = (totalSec < 90) ? 120 : 80;
                 this.attackCounter = tm.util.Random.randint(0, this.attackCounterLimit);
                 break;
             case 4:
@@ -737,7 +746,7 @@ tm.define("Enemy", {
                 this.shuriken = 10;
                 this.xSpd = -3;
                 this.life = 2;
-                this.laneChangeCounterLimit = 60;
+                this.laneChangeCounterLimit = (totalSec < 90) ? 60 : 40;
                 this.laneChangeCounter = tm.util.Random.randint(0, this.laneChangeCounterLimit);
                 this.attackCounterLimit = 0;
                 this.attackCounter = 0;
@@ -899,6 +908,9 @@ tm.define("Enemy", {
                             var eneShu = EnemyShuriken(++uidCounter, this.x, this.y);
                             eneShu.addChildTo(group1);
                             eneShurikenArray.push(eneShu);
+                            var eneShu2 = EnemyShuriken(++uidCounter, this.x, this.y);
+                            eneShu2.addChildTo(group1);
+                            eneShurikenArray.push(eneShu2);
                         }
                     }
                 default:
