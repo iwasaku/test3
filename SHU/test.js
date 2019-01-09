@@ -170,6 +170,12 @@ var nowScore = 0;
 var shurikenLeft = 50;
 var totalFrame = 0;
 var totalSec = 0;
+
+var keyTestLeft = 0;
+var keyTestRight = 0;
+var keyTestUp = 0;
+var keyTestDown = 0;
+
 tm.main(function () {
     // アプリケーションクラスを生成
     var app = tm.display.CanvasApp("#world");
@@ -284,6 +290,10 @@ tm.define("GameScene", {
 
     init: function () {
         this.superInit();
+        keyTestLeft = 0;
+        keyTestRight = 0;
+        keyTestUp = 0;
+        keyTestDown = 0;
 
         group0 = tm.display.CanvasElement().addChildTo(this);
         group1 = tm.display.CanvasElement().addChildTo(this);
@@ -417,6 +427,55 @@ tm.define("GameScene", {
                     y: 550,
                     alpha: 0.0,
                 },
+
+                {
+                    type: "Label", name: "keyTestLeftLabel",
+                    x: 16,
+                    y: 16,
+                    fillStyle: "#fff",
+                    shadowColor: "#000",
+                    shadowBlur: 10,
+                    fontSize: 8,
+                    fontFamily: FONT_FAMILY,
+                    text: "0",
+                    align: "right",
+                },
+                {
+                    type: "Label", name: "keyTestRightLabel",
+                    x: 16,
+                    y: 32,
+                    fillStyle: "#fff",
+                    shadowColor: "#000",
+                    shadowBlur: 10,
+                    fontSize: 8,
+                    fontFamily: FONT_FAMILY,
+                    text: "0",
+                    align: "right",
+                },
+                {
+                    type: "Label", name: "keyTestUpLabel",
+                    x: 16,
+                    y: 48,
+                    fillStyle: "#fff",
+                    shadowColor: "#000",
+                    shadowBlur: 10,
+                    fontSize: 8,
+                    fontFamily: FONT_FAMILY,
+                    text: "0",
+                    align: "right",
+                },
+                {
+                    type: "Label", name: "keyTestDownLabel",
+                    x: 16,
+                    y: 64,
+                    fillStyle: "#fff",
+                    shadowColor: "#000",
+                    shadowBlur: 10,
+                    fontSize: 8,
+                    fontFamily: FONT_FAMILY,
+                    text: "0",
+                    align: "right",
+                },
             ]
         });
         this.shurikenLeftSprite = tm.display.Sprite("pl_shuriken").addChildTo(group2);
@@ -485,6 +544,21 @@ tm.define("GameScene", {
     },
 
     update: function (app) {
+        var key = app.keyboard;
+        // 上下左右移動
+        if (key.getKey('left')) {
+            keyTestLeft += 1;
+        }
+        if (key.getKey('right')) {
+            keyTestRight += 1;
+        }
+        if (key.getKey('up')) {
+            keyTestUp += 1;
+        }
+        if (key.getKey('down')) {
+            keyTestDown += 1;
+        }
+
         if (!player.status.isDead) {
             if (player.status.isStart) {
                 this.frame++;
@@ -591,6 +665,10 @@ tm.define("GameScene", {
             }
         }
         this.shurikenLeftSprite.rotation += 10;
+        this.keyTestLeftLabel.text = keyTestLeft;
+        this.keyTestRightLabel.text = keyTestRight;
+        this.keyTestUpLabel.text = keyTestUp;
+        this.keyTestDownLabel.text = keyTestDown;
     }
 });
 
