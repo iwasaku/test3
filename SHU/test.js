@@ -171,10 +171,8 @@ var shurikenLeft = 50;
 var totalFrame = 0;
 var totalSec = 0;
 
-var keyTestLeft = 0;
-var keyTestRight = 0;
-var keyTestUp = 0;
-var keyTestDown = 0;
+var keyUpFlag = Boolean(0);
+var keyDownFlag = Boolean(0);
 
 tm.main(function () {
     // アプリケーションクラスを生成
@@ -290,10 +288,8 @@ tm.define("GameScene", {
 
     init: function () {
         this.superInit();
-        keyTestLeft = 0;
-        keyTestRight = 0;
-        keyTestUp = 0;
-        keyTestDown = 0;
+        keyUpFlag = Boolean(0);
+        keyDownFlag = Boolean(0);
 
         group0 = tm.display.CanvasElement().addChildTo(this);
         group1 = tm.display.CanvasElement().addChildTo(this);
@@ -351,20 +347,6 @@ tm.define("GameScene", {
                     align: "center",
                 },
                 {
-                    type: "FlatButton", name: "tweetButton",
-                    init: [
-                        {
-                            text: "TWEET",
-                            fontFamily: FONT_FAMILY,
-                            fontSize: 32,
-                            bgColor: "hsl(240, 80%, 70%)",
-                        }
-                    ],
-                    x: SCREEN_CENTER_X - 160,
-                    y: 580,
-                    alpha: 0.0,
-                },
-                {
                     type: "FlatButton", name: "restartButton",
                     init: [
                         {
@@ -375,40 +357,8 @@ tm.define("GameScene", {
                             bgColor: "hsl(240, 0%, 70%)",
                         }
                     ],
-                    x: SCREEN_CENTER_X + 160,
+                    x: SCREEN_CENTER_X,
                     y: 580,
-                    alpha: 0.0,
-                },
-                {
-                    type: "FlatButton", name: "upButton",
-                    init: [
-                        {
-                            text: "⬆",
-                            fontFamily: FONT_FAMILY,
-                            fontSize: 64,
-                            width: 128,
-                            height: 128,
-                            bgColor: "hsl(0, 100%, 50%)",
-                        }
-                    ],
-                    x: 128,
-                    y: 400,
-                    alpha: 0.0,
-                },
-                {
-                    type: "FlatButton", name: "downButton",
-                    init: [
-                        {
-                            text: "⬇",
-                            fontFamily: FONT_FAMILY,
-                            fontSize: 64,
-                            width: 128,
-                            height: 128,
-                            bgColor: "hsl(0, 100%, 50%)",
-                        }
-                    ],
-                    x: 128,
-                    y: 550,
                     alpha: 0.0,
                 },
                 {
@@ -427,61 +377,11 @@ tm.define("GameScene", {
                     y: 550,
                     alpha: 0.0,
                 },
-
-                {
-                    type: "Label", name: "keyTestLeftLabel",
-                    x: 16,
-                    y: 16,
-                    fillStyle: "#fff",
-                    shadowColor: "#000",
-                    shadowBlur: 10,
-                    fontSize: 8,
-                    fontFamily: FONT_FAMILY,
-                    text: "0",
-                    align: "right",
-                },
-                {
-                    type: "Label", name: "keyTestRightLabel",
-                    x: 16,
-                    y: 32,
-                    fillStyle: "#fff",
-                    shadowColor: "#000",
-                    shadowBlur: 10,
-                    fontSize: 8,
-                    fontFamily: FONT_FAMILY,
-                    text: "0",
-                    align: "right",
-                },
-                {
-                    type: "Label", name: "keyTestUpLabel",
-                    x: 16,
-                    y: 48,
-                    fillStyle: "#fff",
-                    shadowColor: "#000",
-                    shadowBlur: 10,
-                    fontSize: 8,
-                    fontFamily: FONT_FAMILY,
-                    text: "0",
-                    align: "right",
-                },
-                {
-                    type: "Label", name: "keyTestDownLabel",
-                    x: 16,
-                    y: 64,
-                    fillStyle: "#fff",
-                    shadowColor: "#000",
-                    shadowBlur: 10,
-                    fontSize: 8,
-                    fontFamily: FONT_FAMILY,
-                    text: "0",
-                    align: "right",
-                },
             ]
         });
         this.shurikenLeftSprite = tm.display.Sprite("pl_shuriken").addChildTo(group2);
         this.shurikenLeftSprite.setPosition(SCREEN_WIDTH - 128, 80);
 
-        this.tweetButton.sleep();
         this.restartButton.sleep();
 
         var self = this;
@@ -489,22 +389,6 @@ tm.define("GameScene", {
             self.app.replaceScene(GameScene());
         };
 
-        this.upButton.sleep();
-        this.upButton.onpointingstart = function () {
-            if (!player.status.canAction) return;
-            if (player.nowFloor >= 2) return;
-            player.status = PL_STATUS.MOVE_UP;
-            player.nextFloor = player.nowFloor + 1;
-            player.moveCounter = 0;
-        };
-        this.downButton.sleep();
-        this.downButton.onpointingstart = function () {
-            if (!player.status.canAction) return;
-            if (player.nowFloor <= 0) return;
-            player.status = PL_STATUS.MOVE_DOWN;
-            player.nextFloor = player.nowFloor - 1;
-            player.moveCounter = 0;
-        };
         this.aButton.sleep();
         this.aButton.onpointingstart = function () {
             if (!player.status.canAction) return;
@@ -532,31 +416,52 @@ tm.define("GameScene", {
         if (!player.status.isStart) {
             this.startLabel.remove();
 
-            this.upButton.setAlpha(0.4);
-            this.downButton.setAlpha(0.4);
             this.aButton.setAlpha(0.4);
 
-            this.upButton.wakeUp();
-            this.downButton.wakeUp();
             this.aButton.wakeUp();
             player.status = PL_STATUS.STAND;
         }
     },
 
     update: function (app) {
+        // 攻撃
+        if (app.pointing.getPointing() == true) {
+            if (!player.status.canAction) return;
+            if (shurikenLeft <= 0) return;
+            player.status = PL_STATUS.SHOT;
+            player.moveCounter = 0;
+            player.gotoAndPlay("shot");
+            shurikenLeft--;
+        }
+        // 上下移動
         var key = app.keyboard;
-        // 上下左右移動
-        if (key.getKey('left')) {
-            keyTestLeft += 1;
-        }
-        if (key.getKey('right')) {
-            keyTestRight += 1;
-        }
         if (key.getKey('up')) {
-            keyTestUp += 1;
+            for (; ;) {
+                if (keyUpFlag) break;
+                keyUpFlag = Boolean(1);
+                if (!player.status.canAction) break;
+                if (player.nowFloor >= 2) break;
+                player.status = PL_STATUS.MOVE_UP;
+                player.nextFloor = player.nowFloor + 1;
+                player.moveCounter = 0;
+                break;
+            }
+        } else {
+            keyUpFlag = Boolean(0);
         }
         if (key.getKey('down')) {
-            keyTestDown += 1;
+            for (; ;) {
+                if (keyDownFlag) break;
+                keyDownFlag = Boolean(1);
+                if (!player.status.canAction) break;
+                if (player.nowFloor <= 0) break;
+                player.status = PL_STATUS.MOVE_DOWN;
+                player.nextFloor = player.nowFloor - 1;
+                player.moveCounter = 0;
+                break;
+            }
+        } else {
+            keyDownFlag = Boolean(0);
         }
 
         if (!player.status.isDead) {
@@ -638,37 +543,19 @@ tm.define("GameScene", {
                 this.stopBGM = true;
 
                 var self = this;
-                // tweet ボタン
-                this.tweetButton.onclick = function () {
-                    var twitterURL = tm.social.Twitter.createURL({
-                        type: "tweet",
-                        text: "SHRKN NG-NG スコア: " + self.nowScoreLabel.text,
-                        hashtags: ["ネムレス", "NEMLESSS"],
-                        url: "https://iwasaku.github.io/test3/SHU/index.html",
-                    });
-                    window.open(twitterURL);
-                };
 
-                this.upButton.sleep();
-                this.downButton.sleep();
                 this.aButton.sleep();
             }
             this.buttonAlpha += 0.05;
             if (this.buttonAlpha > 1.0) {
                 this.buttonAlpha = 1.0;
             }
-            this.tweetButton.setAlpha(this.buttonAlpha);
             this.restartButton.setAlpha(this.buttonAlpha);
             if (this.buttonAlpha > 0.7) {
-                this.tweetButton.wakeUp();
                 this.restartButton.wakeUp();
             }
         }
         this.shurikenLeftSprite.rotation += 10;
-        this.keyTestLeftLabel.text = keyTestLeft;
-        this.keyTestRightLabel.text = keyTestRight;
-        this.keyTestUpLabel.text = keyTestUp;
-        this.keyTestDownLabel.text = keyTestDown;
     }
 });
 
