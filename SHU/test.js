@@ -427,19 +427,13 @@ tm.define("GameScene", {
     update: function (app) {
         var gamepadList = navigator.getGamepads();
         var gamepadNum = gamepadList.length;
-        if (gamepadNum == 1) {
-            var gamepad = gamepad_list[0];
-            //gamepad.buttons[2].pressed;    //A
-            //gamepad.buttons[3].pressed;    //Y
-            //gamepad.buttons[5].pressed;    //L
-            //gamepad.buttons[6].pressed;    //R
-            //gamepad.buttons[7].pressed;    //LZ
-            //gamepad.buttons[8].pressed;    //RZ
-            //gamepad.buttons[13].pressed;    //上
-            //gamepad.buttons[14].pressed;    //下
-            //gamepad.buttons[15].pressed;    //左
-            //gamepad.buttons[16].pressed;    //右
+        for (var iii = 0; iii < gamepadNum; iii++) {
 
+            // ゲームパッドを取得する（undefined 値の場合もある）
+            var gamepad = gamepadList[iii];
+
+            // 出力テスト
+            alert(iii + "=" + gamepad);
         }
 
         if (!player.status.isDead) {
