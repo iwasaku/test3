@@ -567,11 +567,10 @@ tm.define("GameScene", {
         // ------------------------------------------------------------
         // ゲームパッドを順番に取得する
         // ------------------------------------------------------------
-        var i;
-        for (i = 0; i < num; i++) {
+        for (var iii = 0; iii < num; iii++) {
 
             // ゲームパッドを取得する（undefined 値の場合もある）
-            var gamepad = gamepad_list[i];
+            var gamepad = gamepad_list[iii];
             // 出力テスト
             alert(
                 gamepad.id + "\n" +
@@ -582,6 +581,12 @@ tm.define("GameScene", {
                 gamepad.axes + "\n" +
                 gamepad.timestamp
             );
+            var buttonStr;
+            var buttonNum = gamepad.buttons.length;
+            for (var jjj = 0; jjj < buttonNum; jjj++) {
+                buttonStr += jjj + "=" + gamepad.buttons[jjj].pressed + "\n";
+            }
+            alert(buttonStr);
         }
         //　実験ここまで
     }
