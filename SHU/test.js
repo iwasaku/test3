@@ -429,19 +429,19 @@ tm.define("GameScene", {
         var gamepadNum = gamepadList.length;
         if (gamepadNum == 1) {
             var gamepad = gamepadList[0];
-            //gamepad.buttons[2].pressed;    //A
-            //gamepad.buttons[3].pressed;    //Y
-            //gamepad.buttons[5].pressed;    //L
-            //gamepad.buttons[6].pressed;    //R
-            //gamepad.buttons[7].pressed;    //LZ
-            //gamepad.buttons[8].pressed;    //RZ
-            //gamepad.buttons[13].pressed;    //上
-            //gamepad.buttons[14].pressed;    //下
-            //gamepad.buttons[15].pressed;    //左
-            //gamepad.buttons[16].pressed;    //右
+            //gamepad.buttons[1].pressed;    //A
+            //gamepad.buttons[2].pressed;    //Y
+            //gamepad.buttons[4].pressed;    //L
+            //gamepad.buttons[5].pressed;    //R
+            //gamepad.buttons[6].pressed;    //LZ
+            //gamepad.buttons[7].pressed;    //RZ
+            //gamepad.buttons[12].pressed;    //上
+            //gamepad.buttons[13].pressed;    //下
+            //gamepad.buttons[14].pressed;    //左
+            //gamepad.buttons[15].pressed;    //右
 
             // 攻撃
-            if (gamepad.buttons[2].pressed) {
+            if (gamepad.buttons[1].pressed) {
                 for (; ;) {
                     if (keyAFlag) break;
                     keyAFlag = Boolean(1);
@@ -457,7 +457,7 @@ tm.define("GameScene", {
                 keyAFlag = Boolean(0);
             }
             // 上下移動
-            if (gamepad.buttons[13].pressed) {
+            if (gamepad.buttons[12].pressed) {
                 for (; ;) {
                     if (keyUpFlag) break;
                     keyUpFlag = Boolean(1);
@@ -471,7 +471,7 @@ tm.define("GameScene", {
             } else {
                 keyUpFlag = Boolean(0);
             }
-            if (gamepad.buttons[14].pressed) {
+            if (gamepad.buttons[13].pressed) {
                 for (; ;) {
                     if (keyDownFlag) break;
                     keyDownFlag = Boolean(1);
