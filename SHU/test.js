@@ -572,21 +572,21 @@ tm.define("GameScene", {
             // ゲームパッドを取得する（undefined 値の場合もある）
             var gamepad = gamepad_list[iii];
             // 出力テスト
-            alert(
-                gamepad.id + "\n" +
-                gamepad.index + "\n" +
-                gamepad.connected + "\n" +
-                gamepad.mapping + "\n" +
-                gamepad.buttons + "\n" +
-                gamepad.axes + "\n" +
-                gamepad.timestamp
-            );
+            //            alert(
+            //                gamepad.id + "\n" +
+            //                gamepad.index + "\n" +
+            //                gamepad.connected + "\n" +
+            //                gamepad.mapping + "\n" +
+            //                gamepad.buttons + "\n" +
+            //                gamepad.axes + "\n" +
+            //                gamepad.timestamp
+            //            );
             var buttonStr;
             var buttonNum = gamepad.buttons.length;
             for (var jjj = 0; jjj < buttonNum; jjj++) {
-                buttonStr += jjj + "=" + gamepad.buttons[jjj].pressed + "\n";
+                buttonStr += gamepad.buttons[jjj].pressed ? "0" : "1";
             }
-            alert(buttonStr);
+            this.nowScoreLabel.text = buttonStr;
         }
         //　実験ここまで
     }
