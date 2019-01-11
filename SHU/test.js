@@ -429,16 +429,16 @@ tm.define("GameScene", {
         var gamepadNum = gamepadList.length;
         if (gamepadNum == 1) {
             var gamepad = gamepad_list[0];
-            gamepad.buttons[2].pressed;    //A
-            gamepad.buttons[3].pressed;    //Y
-            gamepad.buttons[5].pressed;    //L
-            gamepad.buttons[6].pressed;    //R
-            gamepad.buttons[7].pressed;    //LZ
-            gamepad.buttons[8].pressed;    //RZ
-            gamepad.buttons[13].pressed;    //上
-            gamepad.buttons[14].pressed;    //下
-            gamepad.buttons[15].pressed;    //左
-            gamepad.buttons[16].pressed;    //右
+            //gamepad.buttons[2].pressed;    //A
+            //gamepad.buttons[3].pressed;    //Y
+            //gamepad.buttons[5].pressed;    //L
+            //gamepad.buttons[6].pressed;    //R
+            //gamepad.buttons[7].pressed;    //LZ
+            //gamepad.buttons[8].pressed;    //RZ
+            //gamepad.buttons[13].pressed;    //上
+            //gamepad.buttons[14].pressed;    //下
+            //gamepad.buttons[15].pressed;    //左
+            //gamepad.buttons[16].pressed;    //右
 
             // 攻撃
             if (gamepad.buttons[2].pressed) {
@@ -579,39 +579,6 @@ tm.define("GameScene", {
             }
         }
         this.shurikenLeftSprite.rotation += 10;
-
-        // 実験ここから
-        var gamepad_list = navigator.getGamepads();
-        // ------------------------------------------------------------
-        // アイテム総数を取得する
-        // ------------------------------------------------------------
-        var num = gamepad_list.length;
-
-        // ------------------------------------------------------------
-        // ゲームパッドを順番に取得する
-        // ------------------------------------------------------------
-        for (var iii = 0; iii < num; iii++) {
-
-            // ゲームパッドを取得する（undefined 値の場合もある）
-
-            // 出力テスト
-            //            alert(
-            //                gamepad.id + "\n" +
-            //                gamepad.index + "\n" +
-            //                gamepad.connected + "\n" +
-            //                gamepad.mapping + "\n" +
-            //                gamepad.buttons + "\n" +
-            //                gamepad.axes + "\n" +
-            //                gamepad.timestamp
-            //            );
-            var buttonStr;
-            var buttonNum = gamepad.buttons.length;
-            for (var jjj = 1; jjj < buttonNum; jjj++) {
-                buttonStr += gamepad.buttons[jjj].pressed ? "0" : "1";
-            }
-            this.nowScoreLabel.text = buttonStr;
-        }
-        //　実験ここまで
     }
 });
 
