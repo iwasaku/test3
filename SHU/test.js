@@ -440,51 +440,6 @@ tm.define("GameScene", {
             //gamepad.buttons[15].pressed;    //左
             //gamepad.buttons[16].pressed;    //右
 
-            // 攻撃
-            if (gamepad.buttons[2].pressed) {
-                for (; ;) {
-                    if (keyAFlag) break;
-                    keyAFlag = Boolean(1);
-                    if (!player.status.canAction) return;
-                    if (shurikenLeft <= 0) return;
-                    player.status = PL_STATUS.SHOT;
-                    player.moveCounter = 0;
-                    player.gotoAndPlay("shot");
-                    shurikenLeft--;
-                    break;
-                }
-            } else {
-                keyAFlag = Boolean(0);
-            }
-            // 上下移動
-            if (gamepad.buttons[13].pressed) {
-                for (; ;) {
-                    if (keyUpFlag) break;
-                    keyUpFlag = Boolean(1);
-                    if (!player.status.canAction) break;
-                    if (player.nowFloor >= 2) break;
-                    player.status = PL_STATUS.MOVE_UP;
-                    player.nextFloor = player.nowFloor + 1;
-                    player.moveCounter = 0;
-                    break;
-                }
-            } else {
-                keyUpFlag = Boolean(0);
-            }
-            if (gamepad.buttons[14].pressed) {
-                for (; ;) {
-                    if (keyDownFlag) break;
-                    keyDownFlag = Boolean(1);
-                    if (!player.status.canAction) break;
-                    if (player.nowFloor <= 0) break;
-                    player.status = PL_STATUS.MOVE_DOWN;
-                    player.nextFloor = player.nowFloor - 1;
-                    player.moveCounter = 0;
-                    break;
-                }
-            } else {
-                keyDownFlag = Boolean(0);
-            }
         }
 
         if (!player.status.isDead) {
