@@ -171,6 +171,7 @@ var shurikenLeft = 50;
 var totalFrame = 0;
 var totalSec = 0;
 
+var keyAFlag = Boolean(0);
 var keyUpFlag = Boolean(0);
 var keyDownFlag = Boolean(0);
 
@@ -424,44 +425,66 @@ tm.define("GameScene", {
     },
 
     update: function (app) {
-        // 攻撃
-        if (app.pointing.getPointing() == true) {
-            if (!player.status.canAction) return;
-            if (shurikenLeft <= 0) return;
-            player.status = PL_STATUS.SHOT;
-            player.moveCounter = 0;
-            player.gotoAndPlay("shot");
-            shurikenLeft--;
-        }
-        // 上下移動
-        var key = app.keyboard;
-        if (key.getKey('up')) {
-            for (; ;) {
-                if (keyUpFlag) break;
-                keyUpFlag = Boolean(1);
-                if (!player.status.canAction) break;
-                if (player.nowFloor >= 2) break;
-                player.status = PL_STATUS.MOVE_UP;
-                player.nextFloor = player.nowFloor + 1;
-                player.moveCounter = 0;
-                break;
+        var gamepadList = navigator.getGamepads();
+        var gamepadNum = gamepadList.length;
+        if (gamepadNum == 1) {
+            var gamepad = gamepad_list[0];
+            gamepad.buttons[2].pressed;    //A
+            gamepad.buttons[3].pressed;    //Y
+            gamepad.buttons[5].pressed;    //L
+            gamepad.buttons[6].pressed;    //R
+            gamepad.buttons[7].pressed;    //LZ
+            gamepad.buttons[8].pressed;    //RZ
+            gamepad.buttons[13].pressed;    //上
+            gamepad.buttons[14].pressed;    //下
+            gamepad.buttons[15].pressed;    //左
+            gamepad.buttons[16].pressed;    //右
+
+            // 攻撃
+            if (gamepad.buttons[2].pressed) {
+                for (; ;) {
+                    if (keyAFlag) break;
+                    keyAFlag = Boolean(1);
+                    if (!player.status.canAction) return;
+                    if (shurikenLeft <= 0) return;
+                    player.status = PL_STATUS.SHOT;
+                    player.moveCounter = 0;
+                    player.gotoAndPlay("shot");
+                    shurikenLeft--;
+                    break;
+                }
+            } else {
+                keyAFlag = Boolean(0);
             }
-        } else {
-            keyUpFlag = Boolean(0);
-        }
-        if (key.getKey('down')) {
-            for (; ;) {
-                if (keyDownFlag) break;
-                keyDownFlag = Boolean(1);
-                if (!player.status.canAction) break;
-                if (player.nowFloor <= 0) break;
-                player.status = PL_STATUS.MOVE_DOWN;
-                player.nextFloor = player.nowFloor - 1;
-                player.moveCounter = 0;
-                break;
+            // 上下移動
+            if (gamepad.buttons[13].pressed) {
+                for (; ;) {
+                    if (keyUpFlag) break;
+                    keyUpFlag = Boolean(1);
+                    if (!player.status.canAction) break;
+                    if (player.nowFloor >= 2) break;
+                    player.status = PL_STATUS.MOVE_UP;
+                    player.nextFloor = player.nowFloor + 1;
+                    player.moveCounter = 0;
+                    break;
+                }
+            } else {
+                keyUpFlag = Boolean(0);
             }
-        } else {
-            keyDownFlag = Boolean(0);
+            if (gamepad.buttons[14].pressed) {
+                for (; ;) {
+                    if (keyDownFlag) break;
+                    keyDownFlag = Boolean(1);
+                    if (!player.status.canAction) break;
+                    if (player.nowFloor <= 0) break;
+                    player.status = PL_STATUS.MOVE_DOWN;
+                    player.nextFloor = player.nowFloor - 1;
+                    player.moveCounter = 0;
+                    break;
+                }
+            } else {
+                keyDownFlag = Boolean(0);
+            }
         }
 
         if (!player.status.isDead) {
@@ -570,7 +593,7 @@ tm.define("GameScene", {
         for (var iii = 0; iii < num; iii++) {
 
             // ゲームパッドを取得する（undefined 値の場合もある）
-            var gamepad = gamepad_list[iii];
+
             // 出力テスト
             //            alert(
             //                gamepad.id + "\n" +
@@ -583,7 +606,7 @@ tm.define("GameScene", {
             //            );
             var buttonStr;
             var buttonNum = gamepad.buttons.length;
-            for (var jjj = 0; jjj < buttonNum; jjj++) {
+            for (var jjj = 1; jjj < buttonNum; jjj++) {
                 buttonStr += gamepad.buttons[jjj].pressed ? "0" : "1";
             }
             this.nowScoreLabel.text = buttonStr;
