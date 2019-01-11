@@ -427,13 +427,64 @@ tm.define("GameScene", {
     update: function (app) {
         var gamepadList = navigator.getGamepads();
         var gamepadNum = gamepadList.length;
-        for (var iii = 0; iii < gamepadNum; iii++) {
+        if (gamepadNum == 1) {
+            var gamepad = gamepadList[0];
+            //gamepad.buttons[2].pressed;    //A
+            //gamepad.buttons[3].pressed;    //Y
+            //gamepad.buttons[5].pressed;    //L
+            //gamepad.buttons[6].pressed;    //R
+            //gamepad.buttons[7].pressed;    //LZ
+            //gamepad.buttons[8].pressed;    //RZ
+            //gamepad.buttons[13].pressed;    //上
+            //gamepad.buttons[14].pressed;    //下
+            //gamepad.buttons[15].pressed;    //左
+            //gamepad.buttons[16].pressed;    //右
 
-            // ゲームパッドを取得する（undefined 値の場合もある）
-            var gamepad = gamepadList[iii];
-
-            // 出力テスト
-            alert(iii + "=" + gamepad);
+            // 攻撃
+            if (gamepad.buttons[2].pressed) {
+                for (; ;) {
+                    if (keyAFlag) break;
+                    keyAFlag = Boolean(1);
+                    if (!player.status.canAction) break;
+                    if (shurikenLeft <= 0) break;
+                    player.status = PL_STATUS.SHOT;
+                    player.moveCounter = 0;
+                    player.gotoAndPlay("shot");
+                    shurikenLeft--;
+                    break;
+                }
+            } else {
+                keyAFlag = Boolean(0);
+            }
+            // 上下移動
+            if (gamepad.buttons[13].pressed) {
+                for (; ;) {
+                    if (keyUpFlag) break;
+                    keyUpFlag = Boolean(1);
+                    if (!player.status.canAction) break;
+                    if (player.nowFloor >= 2) break;
+                    player.status = PL_STATUS.MOVE_UP;
+                    player.nextFloor = player.nowFloor + 1;
+                    player.moveCounter = 0;
+                    break;
+                }
+            } else {
+                keyUpFlag = Boolean(0);
+            }
+            if (gamepad.buttons[14].pressed) {
+                for (; ;) {
+                    if (keyDownFlag) break;
+                    keyDownFlag = Boolean(1);
+                    if (!player.status.canAction) break;
+                    if (player.nowFloor <= 0) break;
+                    player.status = PL_STATUS.MOVE_DOWN;
+                    player.nextFloor = player.nowFloor - 1;
+                    player.moveCounter = 0;
+                    break;
+                }
+            } else {
+                keyDownFlag = Boolean(0);
+            }
         }
 
         if (!player.status.isDead) {
