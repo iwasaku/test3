@@ -572,9 +572,16 @@ tm.define("GameScene", {
 
             // ゲームパッドを取得する（undefined 値の場合もある）
             var gamepad = gamepad_list[i];
-
             // 出力テスト
-            alert(gamepad);
+            alert(
+                gamepad.id + "\n" +
+                gamepad.index + "\n" +
+                gamepad.connected + "\n" +
+                gamepad.mapping + "\n" +
+                gamepad.buttons + "\n" +
+                gamepad.axes + "\n" +
+                gamepad.timestamp
+            );
         }
         //　実験ここまで
     }
