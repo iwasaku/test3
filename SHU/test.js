@@ -362,22 +362,6 @@ tm.define("GameScene", {
                     y: 580,
                     alpha: 0.0,
                 },
-                {
-                    type: "FlatButton", name: "aButton",
-                    init: [
-                        {
-                            text: "A",
-                            fontFamily: FONT_FAMILY,
-                            fontSize: 64,
-                            width: 128,
-                            height: 128,
-                            bgColor: "hsl(0, 100%, 50%)",
-                        }
-                    ],
-                    x: 1136 - 128,
-                    y: 550,
-                    alpha: 0.0,
-                },
             ]
         });
         this.shurikenLeftSprite = tm.display.Sprite("pl_shuriken").addChildTo(group2);
@@ -388,16 +372,6 @@ tm.define("GameScene", {
         var self = this;
         this.restartButton.onpointingstart = function () {
             self.app.replaceScene(GameScene());
-        };
-
-        this.aButton.sleep();
-        this.aButton.onpointingstart = function () {
-            if (!player.status.canAction) return;
-            if (shurikenLeft <= 0) return;
-            player.status = PL_STATUS.SHOT;
-            player.moveCounter = 0;
-            player.gotoAndPlay("shot");
-            shurikenLeft--;
         };
 
         this.buttonAlpha = 0.0;
@@ -417,9 +391,6 @@ tm.define("GameScene", {
         if (!player.status.isStart) {
             this.startLabel.remove();
 
-            this.aButton.setAlpha(0.4);
-
-            this.aButton.wakeUp();
             player.status = PL_STATUS.STAND;
         }
     },
@@ -564,10 +535,6 @@ tm.define("GameScene", {
             if (!this.stopBGM) {
                 //                tm.asset.AssetManager.get("fallSE").clone().play();
                 this.stopBGM = true;
-
-                var self = this;
-
-                this.aButton.sleep();
             }
             this.buttonAlpha += 0.05;
             if (this.buttonAlpha > 1.0) {
