@@ -416,6 +416,7 @@ tm.define("GameScene", {
             //gamepad.buttons[13].pressed;    //下
             //gamepad.buttons[14].pressed;    //左
             //gamepad.buttons[15].pressed;    //右
+            //axes[0];  // Lレバー左-1.0〜+1.0右
             var axes = gamepad.axes;
             var axesLen = axes.length;
 
@@ -464,7 +465,7 @@ tm.define("GameScene", {
             } else {
                 keyDownFlag = Boolean(0);
             }
-            shurikenLeft = axes[0];
+            shurikenLeft = axes[1];
         }
 
         if (!player.status.isDead) {
