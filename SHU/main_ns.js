@@ -464,7 +464,7 @@ tm.define("GameScene", {
             } else {
                 keyDownFlag = Boolean(0);
             }
-            shurikenLeft = axesLen;
+            shurikenLeft = axes[0];
         }
 
         if (!player.status.isDead) {
