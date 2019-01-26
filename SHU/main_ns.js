@@ -326,7 +326,7 @@ tm.define("GameScene", {
                 {
                     type: "Label", name: "shurikenLeftLabel",
                     //                    x: SCREEN_WIDTH - 16,
-                    x: 32,
+                    x: 64,
                     y: 80,
                     fillStyle: "#fff",
                     shadowColor: "#000",
@@ -536,16 +536,11 @@ tm.define("GameScene", {
             else this.shurikenLeftLabel.text = 999;
             // ここからaxesテスト
             var axesStr = "";
-            axesStr += gamepad.axes.length;
-            axesStr += "[";
-            axesStr += gamepad.axes[0];
-            axesStr += "][";
-            axesStr += gamepad.axes[1];
-            axesStr += "][";
-            axesStr += gamepad.axes[2];
-            axesStr += "][";
-            axesStr += gamepad.axes[3];
-            axesStr += "]";
+            axesStr += ">" + gamepad.axes.length;
+            axesStr += "[" + gamepad.axes[0] + "]";
+            axesStr += "[" + gamepad.axes[1] + "]";
+            axesStr += "[" + gamepad.axes[2] + "]";
+            axesStr += "[" + gamepad.axes[3] + "]";
             // ここまでaxesテスト
             // 当たり判定
             checkPlShurikenToEnemy();
