@@ -543,7 +543,7 @@ tm.define("GameScene", {
                 //            axesStr += "[" + gamepad.axes[1] + "]";
                 //            axesStr += "[" + gamepad.axes[2] + "]";
                 //            axesStr += "[" + gamepad.axes[3] + "]";
-                axesStr += ">>>>" + gamepad;
+                axesStr += ">>>>" + gamepad.axes;
                 this.shurikenLeftLabel.text = axesStr;
             }
             // ここまでaxesテスト
