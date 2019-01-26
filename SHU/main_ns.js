@@ -417,6 +417,7 @@ tm.define("GameScene", {
             //gamepad.buttons[14].pressed;    //左
             //gamepad.buttons[15].pressed;    //右
             //axes[0];  // Lレバー左-1.0〜+1.0右
+            //axes[1];  // Lレバー上-1.0〜+1.0下
             var axes = gamepad.axes;
             var axesLen = axes.length;
 
@@ -437,7 +438,7 @@ tm.define("GameScene", {
                 keyAFlag = Boolean(0);
             }
             // 上下移動
-            if (gamepad.buttons[12].pressed) {
+            if (gamepad.buttons[12].pressed || (axes[1] < -0.9)) {
                 for (; ;) {
                     if (keyUpFlag) break;
                     keyUpFlag = Boolean(1);
@@ -451,7 +452,7 @@ tm.define("GameScene", {
             } else {
                 keyUpFlag = Boolean(0);
             }
-            if (gamepad.buttons[13].pressed) {
+            if (gamepad.buttons[13].pressed || (axes[1] > 0.9)) {
                 for (; ;) {
                     if (keyDownFlag) break;
                     keyDownFlag = Boolean(1);
@@ -465,7 +466,7 @@ tm.define("GameScene", {
             } else {
                 keyDownFlag = Boolean(0);
             }
-            shurikenLeft = axes[1];
+            //            shurikenLeft = axes[1];
         }
 
         if (!player.status.isDead) {
