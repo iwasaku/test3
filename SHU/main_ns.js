@@ -537,9 +537,9 @@ tm.define("GameScene", {
             // ここからaxesテスト
             {
                 var gamepad = gamepadList[0];
-                var axesStr = ">>>>";
+                var axesStr = "))))";
                 //                axesStr += ">>>>" + gamepad.axes.length;
-                //            axesStr += "[" + gamepad.axes[0] + "]";
+                axesStr += "[" + gamepad.axes[0] + "]";
                 //            axesStr += "[" + gamepad.axes[1] + "]";
                 //            axesStr += "[" + gamepad.axes[2] + "]";
                 //            axesStr += "[" + gamepad.axes[3] + "]";
