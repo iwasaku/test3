@@ -536,7 +536,7 @@ tm.define("GameScene", {
             else this.shurikenLeftLabel.text = 999;
             // ここからaxesテスト
             {
-                //                var gamepad = gamepadList[0];
+                var gamepad = gamepadList[0];
                 var axesStr = ">>>>";
                 //                axesStr += ">>>>" + gamepad.axes.length;
                 //            axesStr += "[" + gamepad.axes[0] + "]";
