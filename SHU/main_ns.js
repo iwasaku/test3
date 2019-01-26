@@ -535,13 +535,16 @@ tm.define("GameScene", {
             if (shurikenLeft < 999) this.shurikenLeftLabel.text = shurikenLeft;
             else this.shurikenLeftLabel.text = 999;
             // ここからaxesテスト
-            var axesStr = "";
-            axesStr += ">>>>" + gamepad.axes.length;
-            //            axesStr += "[" + gamepad.axes[0] + "]";
-            //            axesStr += "[" + gamepad.axes[1] + "]";
-            //            axesStr += "[" + gamepad.axes[2] + "]";
-            //            axesStr += "[" + gamepad.axes[3] + "]";
-            this.shurikenLeftLabel.text = axesStr;
+            {
+                var gamepad = gamepadList[0];
+                var axesStr = "";
+                axesStr += ">>>>" + gamepad.axes.length;
+                //            axesStr += "[" + gamepad.axes[0] + "]";
+                //            axesStr += "[" + gamepad.axes[1] + "]";
+                //            axesStr += "[" + gamepad.axes[2] + "]";
+                //            axesStr += "[" + gamepad.axes[3] + "]";
+                this.shurikenLeftLabel.text = axesStr;
+            }
             // ここまでaxesテスト
             // 当たり判定
             checkPlShurikenToEnemy();
