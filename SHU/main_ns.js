@@ -417,6 +417,7 @@ tm.define("GameScene", {
             //gamepad.buttons[14].pressed;    //左
             //gamepad.buttons[15].pressed;    //右
             var axes = gamepad.axes;
+            var axesLen = axes.length;
 
             // 攻撃
             if (gamepad.buttons[1].pressed) {
@@ -463,6 +464,7 @@ tm.define("GameScene", {
             } else {
                 keyDownFlag = Boolean(0);
             }
+            shurikenLeft = axesLen;
         }
 
         if (!player.status.isDead) {
