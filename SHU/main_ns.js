@@ -536,11 +536,11 @@ tm.define("GameScene", {
             else this.shurikenLeftLabel.text = 999;
             // ここからaxesテスト
             var axesStr = "";
-            axesStr += ">" + gamepad.axes.length;
-            axesStr += "[" + gamepad.axes[0] + "]";
-            axesStr += "[" + gamepad.axes[1] + "]";
-            axesStr += "[" + gamepad.axes[2] + "]";
-            axesStr += "[" + gamepad.axes[3] + "]";
+            axesStr += ">>>>" + gamepad.axes.length;
+            //            axesStr += "[" + gamepad.axes[0] + "]";
+            //            axesStr += "[" + gamepad.axes[1] + "]";
+            //            axesStr += "[" + gamepad.axes[2] + "]";
+            //            axesStr += "[" + gamepad.axes[3] + "]";
             // ここまでaxesテスト
             // 当たり判定
             checkPlShurikenToEnemy();
