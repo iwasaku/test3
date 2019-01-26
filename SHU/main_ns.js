@@ -325,8 +325,7 @@ tm.define("GameScene", {
                 },
                 {
                     type: "Label", name: "shurikenLeftLabel",
-                    //                    x: SCREEN_WIDTH - 16,
-                    x: 64,
+                    x: SCREEN_WIDTH - 16,
                     y: 80,
                     fillStyle: "#fff",
                     shadowColor: "#000",
@@ -417,6 +416,7 @@ tm.define("GameScene", {
             //gamepad.buttons[13].pressed;    //下
             //gamepad.buttons[14].pressed;    //左
             //gamepad.buttons[15].pressed;    //右
+            var axes = gamepad.axes;
 
             // 攻撃
             if (gamepad.buttons[1].pressed) {
@@ -534,19 +534,7 @@ tm.define("GameScene", {
             this.nowScoreLabel.text = nowScore;
             if (shurikenLeft < 999) this.shurikenLeftLabel.text = shurikenLeft;
             else this.shurikenLeftLabel.text = 999;
-            // ここからaxesテスト
-            {
-                var gamepad = gamepadList[0];
-                var axesStr = "))))";
-                //                axesStr += ">>>>" + gamepad.axes.length;
-                //axesStr += "[" + gamepad.axes[0] + "]";
-                //            axesStr += "[" + gamepad.axes[1] + "]";
-                //            axesStr += "[" + gamepad.axes[2] + "]";
-                //            axesStr += "[" + gamepad.axes[3] + "]";
-                axesStr += ">>>>" + gamepad.axes;
-                this.shurikenLeftLabel.text = axesStr;
-            }
-            // ここまでaxesテスト
+
             // 当たり判定
             checkPlShurikenToEnemy();
             checkEneShurikenToPlayer();
