@@ -325,7 +325,8 @@ tm.define("GameScene", {
                 },
                 {
                     type: "Label", name: "shurikenLeftLabel",
-                    x: SCREEN_WIDTH - 16,
+                    //                    x: SCREEN_WIDTH - 16,
+                    x: 32,
                     y: 80,
                     fillStyle: "#fff",
                     shadowColor: "#000",
@@ -400,12 +401,18 @@ tm.define("GameScene", {
         var gamepadNum = gamepadList.length;
         if (gamepadNum == 1) {
             var gamepad = gamepadList[0];
+            //gamepad.buttons[0].pressed;    //NULL
             //gamepad.buttons[1].pressed;    //A
             //gamepad.buttons[2].pressed;    //Y
+            //gamepad.buttons[3].pressed;    //????
             //gamepad.buttons[4].pressed;    //L
             //gamepad.buttons[5].pressed;    //R
             //gamepad.buttons[6].pressed;    //LZ
             //gamepad.buttons[7].pressed;    //RZ
+            //gamepad.buttons[8].pressed;    //????
+            //gamepad.buttons[9].pressed;    //????
+            //gamepad.buttons[10].pressed;    //????
+            //gamepad.buttons[11].pressed;    //????
             //gamepad.buttons[12].pressed;    //上
             //gamepad.buttons[13].pressed;    //下
             //gamepad.buttons[14].pressed;    //左
@@ -527,7 +534,19 @@ tm.define("GameScene", {
             this.nowScoreLabel.text = nowScore;
             if (shurikenLeft < 999) this.shurikenLeftLabel.text = shurikenLeft;
             else this.shurikenLeftLabel.text = 999;
-
+            // ここからaxesテスト
+            var axesStr = "";
+            axesStr += gamepad.axes.length;
+            axesStr += "[";
+            axesStr += gamepad.axes[0];
+            axesStr += "][";
+            axesStr += gamepad.axes[1];
+            axesStr += "][";
+            axesStr += gamepad.axes[2];
+            axesStr += "][";
+            axesStr += gamepad.axes[3];
+            axesStr += "]";
+            // ここまでaxesテスト
             // 当たり判定
             checkPlShurikenToEnemy();
             checkEneShurikenToPlayer();
