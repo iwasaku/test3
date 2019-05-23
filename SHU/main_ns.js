@@ -418,6 +418,8 @@ tm.define("GameScene", {
             //gamepad.buttons[15].pressed;    //右
             //axes[0];  // Lレバー左-1.0〜+1.0右
             //axes[1];  // Lレバー上-1.0〜+1.0下
+            //axes[2];  // ???? Rレバー左-1.0〜+1.0右
+            //axes[3];  // ???? Rレバー上-1.0〜+1.0下
             var axes = gamepad.axes;
             var axesLen = axes.length;
 
