@@ -24,7 +24,6 @@ var ASSETS = {
     "bg_yuka_1": "./resource/bg_yuka_1.png",
     "bg_yuka_2": "./resource/bg_yuka_2.png",
 
-    "silentSE": "https://iwasaku.github.io/test7/NEMLESSSTER/resource/silent.mp3",    // 開発時用（mp3はfile://でのアクセスが拒否されるので、https://経由にする）
     "fallSE": "https://iwasaku.github.io/test3/SHU/resource/fall.mp3",    // 開発時用（mp3はfile://でのアクセスが拒否されるので、https://経由にする）
     //"fallSE": "./resource/fall.mp3",
 };
@@ -268,7 +267,6 @@ tm.define("TitleScene", {
 
         var self = this;
         this.startButton.onpointingstart = function () {
-            tm.asset.AssetManager.get("silentSE").clone().play();
             self.app.replaceScene(GameScene());
         };
     },
