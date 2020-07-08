@@ -1,3 +1,8 @@
+const sound = new Howl({
+    src: 'https://iwasaku.github.io/test3/SHU/resource/fall.mp3'
+});
+sound.play();
+
 var SCREEN_WIDTH = 1136;              // スクリーン幅
 var SCREEN_HEIGHT = 640;              // スクリーン高さ
 var SCREEN_CENTER_X = SCREEN_WIDTH / 2;   // スクリーン幅の半分
