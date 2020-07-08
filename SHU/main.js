@@ -1,7 +1,6 @@
-const sound = new Howl({
+const fallSE = new Howl({
     src: 'https://iwasaku.github.io/test3/SHU/resource/fall.mp3'
 });
-sound.play();
 
 var SCREEN_WIDTH = 1136;              // スクリーン幅
 var SCREEN_HEIGHT = 640;              // スクリーン高さ
@@ -28,9 +27,6 @@ var ASSETS = {
     "bg_yuka_0": "./resource/bg_yuka_0.png",
     "bg_yuka_1": "./resource/bg_yuka_1.png",
     "bg_yuka_2": "./resource/bg_yuka_2.png",
-
-    "fallSE": "https://iwasaku.github.io/test3/SHU/resource/fall.mp3",    // 開発時用（mp3はfile://でのアクセスが拒否されるので、https://経由にする）
-    //"fallSE": "./resource/fall.mp3",
 };
 
 // 定義
@@ -565,7 +561,7 @@ tm.define("GameScene", {
             checkEneShurikenToPlayer();
         } else {
             if (!this.stopBGM) {
-                tm.asset.AssetManager.get("fallSE").clone().play();
+                fallSE.play();
                 this.stopBGM = true;
 
                 var self = this;
