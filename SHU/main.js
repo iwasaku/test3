@@ -171,6 +171,8 @@ var nowScore = 0;
 var shurikenLeft = 50;
 var totalFrame = 0;
 var totalSec = 0;
+var fitWindowTimer = 0;
+
 tm.main(function () {
     // アプリケーションクラスを生成
     var app = tm.display.CanvasApp("#world");
