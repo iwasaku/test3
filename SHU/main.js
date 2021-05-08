@@ -1,7 +1,3 @@
-const fallSE = new Howl({
-    src: 'https://iwasaku.github.io/test3/SHU/resource/fall.mp3'
-});
-
 var SCREEN_WIDTH = 1136;              // スクリーン幅
 var SCREEN_HEIGHT = 640;              // スクリーン高さ
 var SCREEN_CENTER_X = SCREEN_WIDTH / 2;   // スクリーン幅の半分
@@ -28,6 +24,10 @@ var ASSETS = {
     "bg_yuka_1": "./resource/bg_yuka_1.png",
     "bg_yuka_2": "./resource/bg_yuka_2.png",
 };
+
+const fallSE = new Howl({
+    src: 'https://iwasaku.github.io/test3/SHU/resource/fall.mp3'
+});
 
 // 定義
 var PL_STATUS = defineEnum({
@@ -175,7 +175,7 @@ tm.main(function () {
     // アプリケーションクラスを生成
     var app = tm.display.CanvasApp("#world");
     app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);    // サイズ(解像度)設定
-    app.fitWindow();                            // 自動フィッティング有効
+    app.fitWindow(false);                       // 手動フィッティング
     app.background = "rgba(77, 136, 255, 1.0)"; // 背景色
     app.fps = 30;                               // フレーム数
 
@@ -226,6 +226,7 @@ tm.define("LogoScene", {
         // 時間が来たらタイトルへ
         //        if(++this.localTimer >= 5*app.fps)
         this.app.replaceScene(TitleScene());
+        app.fitWindow(false);                       // 手動フィッティング
     }
 });
 
@@ -274,6 +275,7 @@ tm.define("TitleScene", {
 
     update: function (app) {
         app.background = "rgba(0, 0, 0, 1.0)"; // 背景色
+        app.fitWindow(false);                       // 手動フィッティング
     }
 });
 
@@ -462,6 +464,7 @@ tm.define("GameScene", {
         nowScore = 0;
         shurikenLeft = 50;
         totalFrame = 0;
+        fitWindowTimer = 0;
 
         this.frame = 0;
 
@@ -486,6 +489,7 @@ tm.define("GameScene", {
     },
 
     update: function (app) {
+        if (++fitWindowTimer % 15 === 0) app.fitWindow(false);    // 手動フィッティング
         if (!player.status.isDead) {
             if (player.status.isStart) {
                 this.frame++;
