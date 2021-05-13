@@ -577,7 +577,7 @@ tm.define("GameScene", {
                         type: "tweet",
                         text: "SHRKN NG-NG スコア: " + self.nowScoreLabel.text,
                         hashtags: ["ネムレス", "NEMLESSS"],
-                        url: "https://iwasaku.github.io/test3/SHU/index.html",
+                        url: "https://iwasaku.github.io/test3/SHU/",
                     });
                     window.open(twitterURL);
                 };
