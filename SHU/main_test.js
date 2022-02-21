@@ -8,7 +8,7 @@ var POINT_RATIO_X3_ZONE = SCREEN_CENTER_X / 4;   // 得点3倍ゾーン
 
 var FONT_FAMILY = "'Press Start 2P','Meiryo',sans-serif";
 var ASSETS = {
-    "player": "./resource/shinobi_128_anim.png",
+    "player": "./resource/shinobi_128_anim.png?20220222",
     "pl_shuriken": "./resource/shuriken.png",
     "ene_shuriken": "./resource/shuriken.png",
 
