@@ -8,7 +8,7 @@ var POINT_RATIO_X3_ZONE = SCREEN_CENTER_X / 4;   // 得点3倍ゾーン
 
 var FONT_FAMILY = "'Press Start 2P','Meiryo',sans-serif";
 var ASSETS = {
-    "player": "./resource/shinobi_128_anim.png?202203191035",
+    "player": "./resource/shinobi_128_anim.png?202203191040",
     "pl_shuriken": "./resource/shuriken.png",
     "ene_shuriken": "./resource/shuriken.png",
 
@@ -617,13 +617,13 @@ tm.define("Player", {
             frame: {
                 width: 128,
                 height: 128,
-                count: 6
+                count: 7
             },
-            // アニメーションの定義（開始コマ、終了コマ、次のアニメーション）
+            // アニメーションの定義（開始コマ、終了コマ+1、次のアニメーション、表示インターバル）
             animations: {
                 "stand": [0, 2, "stand", 10],
                 "jump": [1, 3, "stand", 10],
-                "shot": [3, 5, "stand", 5],
+                "shot": [3, 6, "stand", 5],
             }
         });
 
