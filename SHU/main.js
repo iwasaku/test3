@@ -8,7 +8,7 @@ var POINT_RATIO_X3_ZONE = SCREEN_CENTER_X / 4;   // 得点3倍ゾーン
 
 var FONT_FAMILY = "'Press Start 2P','Meiryo',sans-serif";
 var ASSETS = {
-    "player": "./resource/angus_128_anim.png",
+    "player": "./resource/shinobi_128_anim.png?202203191200",
     "pl_shuriken": "./resource/shuriken.png",
     "ene_shuriken": "./resource/shuriken.png",
 
@@ -169,6 +169,7 @@ var eneShurikenArray = [];
 var uidCounter = 0;
 var nowScore = 0;
 var shurikenLeft = 50;
+var shurikenInterval = 0;
 var totalFrame = 0;
 var totalSec = 0;
 var fitWindowTimer = 0;
@@ -245,11 +246,34 @@ tm.define("TitleScene", {
                 {
                     type: "Label", name: "titleLabel",
                     x: SCREEN_CENTER_X,
-                    y: 320,
+                    y: 160,
                     fillStyle: "#fff",
                     fontSize: 64,
                     fontFamily: FONT_FAMILY,
                     text: "SHRKN NG-NG\n~U.v.U.2~",
+                    align: "center",
+                },
+                {
+                    type: "FlatButton", name: "emuumemuuButton",
+                    init: [
+                        {
+                            text: "@emuumemuu",
+                            fontFamily: FONT_FAMILY,
+                            fontSize: 32,
+                            bgColor: "hsl(0, 0%, 0%)",
+                        }
+                    ],
+                    x: SCREEN_CENTER_X,
+                    y: 420,
+                },
+                {
+                    type: "Label", name: "thxLabel",
+                    x: SCREEN_CENTER_X,
+                    y: 390,
+                    fillStyle: "#fff",
+                    fontSize: 32,
+                    fontFamily: FONT_FAMILY,
+                    text: "Special Thanks",
                     align: "center",
                 },
                 {
@@ -269,6 +293,9 @@ tm.define("TitleScene", {
         });
         this.localTimer = 0;
 
+        this.emuumemuuButton.onpointingstart = function () {
+            window.open('https://twitter.com/emuumemuu');
+        };
         var self = this;
         this.startButton.onpointingstart = function () {
             self.app.replaceScene(GameScene());
@@ -442,6 +469,7 @@ tm.define("GameScene", {
             player.status = PL_STATUS.MOVE_UP;
             player.nextFloor = player.nowFloor + 1;
             player.moveCounter = 0;
+            player.gotoAndPlay("jump");
         };
         this.downButton.sleep();
         this.downButton.onpointingstart = function () {
@@ -450,15 +478,18 @@ tm.define("GameScene", {
             player.status = PL_STATUS.MOVE_DOWN;
             player.nextFloor = player.nowFloor - 1;
             player.moveCounter = 0;
+            player.gotoAndPlay("jump");
         };
         this.aButton.sleep();
         this.aButton.onpointingstart = function () {
             if (!player.status.canAction) return;
             if (shurikenLeft <= 0) return;
+            if (shurikenInterval > 0) return;
             player.status = PL_STATUS.SHOT;
             player.moveCounter = 0;
-            player.gotoAndPlay("shot");
+            player.gotoAndPlay("shot0");
             shurikenLeft--;
+            shurikenInterval = 6;
         };
 
         this.buttonAlpha = 0.0;
@@ -499,6 +530,7 @@ tm.define("GameScene", {
                 if (this.tmpSec > 60) this.frame = 0;
                 totalFrame++;
                 totalSec = Math.floor(totalFrame / app.fps);
+                if (shurikenInterval > 0) --shurikenInterval;
 
                 if (totalFrame % 60 === 0) {
                     this.enemyNum = -1;
@@ -615,12 +647,14 @@ tm.define("Player", {
             frame: {
                 width: 128,
                 height: 128,
-                count: 3
+                count: 6
             },
-            // アニメーションの定義（開始コマ、終了コマ、次のアニメーション）
+            // アニメーションの定義（開始コマ、終了コマ+1、次のアニメーション、表示インターバル）
             animations: {
                 "stand": [0, 2, "stand", 10],
-                "shot": [1, 3, "stand", 5],
+                "jump": [1, 3, "stand", 10],
+                "shot0": [3, 4, "shot1", 4],
+                "shot1": [4, 5, "stand", 3],
             }
         });
 
