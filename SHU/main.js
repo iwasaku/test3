@@ -293,7 +293,7 @@ tm.define("TitleScene", {
         });
         this.localTimer = 0;
 
-        this.emuumemuuButton.onpointingstart = function () {
+        this.emuumemuuButton.onclick = function () {
             window.open('https://twitter.com/emuumemuu');
         };
         var self = this;
