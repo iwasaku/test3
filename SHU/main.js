@@ -302,16 +302,22 @@ phina.define("LogoScene", {
         this.superInit(option);
         this.backgroundColor = 'black';
         this.localTimer = 0;
+        this.font1 = false;
+        this.font2 = false;
     },
 
     update: function (app) {
-        // 時間が来たらタイトルへ
-        //        if(++this.localTimer >= 5*app.fps)
-        // フォント読み込み待ち
+        // フォントロード完了待ち
         var self = this;
-        document.fonts.load('12px "Press Start 2P"').then(function () {
-            self.exit();
+        document.fonts.load('10pt "Press Start 2P"').then(function () {
+            self.font1 = true;
         });
+        document.fonts.load('10pt "icomoon"').then(function () {
+            self.font2 = true;
+        });
+        if (this.font1 && this.font2) {
+            self.exit();
+        }
     }
 });
 
@@ -437,17 +443,40 @@ phina.define("GameScene", {
             x: SCREEN_CENTER_X,
             y: SCREEN_CENTER_Y + 80,
         }).addChildTo(group2);
-        this.tweetButton = Button({
-            text: "POST",
+        this.xButton = Button({
+            text: String.fromCharCode(0xe902),
             fontSize: 32,
-            fontFamily: FONT_FAMILY,
+            fontFamily: "icomoon",
+            fill: "#7575EF",
+            x: SCREEN_CENTER_X - 160 - 76,
+            y: 580,
+            cornerRadius: 8,
+            width: 60,
+        }).addChildTo(group2);
+        this.xButton.alpha = 0.0;
+        this.threadsButton = Button({
+            text: String.fromCharCode(0xe901),
+            fontSize: 32,
+            fontFamily: "icomoon",
             fill: "#7575EF",
             x: SCREEN_CENTER_X - 160,
             y: 580,
             cornerRadius: 8,
-            width: 240,
+            width: 60,
         }).addChildTo(group2);
-        this.tweetButton.alpha = 0.0;
+        this.threadsButton.alpha = 0.0;
+        this.bskyButton = Button({
+            text: String.fromCharCode(0xe900),
+            fontSize: 32,
+            fontFamily: "icomoon",
+            fill: "#7575EF",
+            x: SCREEN_CENTER_X - 160 + 76,
+            y: 580,
+            cornerRadius: 8,
+            width: 60,
+        }).addChildTo(group2);
+        this.bskyButton.alpha = 0.0;
+
         this.restartButton = Button({
             text: "RESTART",
             fontSize: 32,
@@ -513,16 +542,9 @@ phina.define("GameScene", {
 
         var self = this;
 
-        this.tweetButton.sleep();
-        this.tweetButton.onclick = function () {
-            var twitterURL = phina.social.Twitter.createURL({
-                type: "tweet",
-                text: "SHRKN NG-NG スコア: " + self.nowScoreLabel.text + "\n",
-                hashtags: ["ネムレス", "NEMLESSS"],
-                url: "https://iwasaku.github.io/test3/SHU/",
-            });
-            window.open(twitterURL);
-        };
+        this.xButton.sleep();
+        this.threadsButton.sleep();
+        this.bskyButton.sleep();
 
         this.restartButton.sleep();
         this.restartButton.onpointstart = function () {
@@ -672,15 +694,41 @@ phina.define("GameScene", {
                 this.upButton.sleep();
                 this.downButton.sleep();
                 this.aButton.sleep();
+
+                {
+                    var postText = "SHRKN NG-NG\nスコア: " + this.nowScoreLabel.text;
+                    var postURL = "https://iwasaku.github.io/test3/SHU/";
+                    var postTags = "#ネムレス #NEMLESSS";
+                    this.xButton.onclick = function () {
+                        // https://developer.x.com/en/docs/twitter-for-websites/tweet-button/guides/web-intent
+                        var shareURL = "https://x.com/intent/tweet?text=" + encodeURIComponent(postText + "\n" + postTags + "\n") + "&url=" + encodeURIComponent(postURL);
+                        window.open(shareURL);
+                    };
+                    this.threadsButton.onclick = function () {
+                        // https://developers.facebook.com/docs/threads/threads-web-intents/
+                        // web intentでのハッシュタグの扱いが環境（ブラウザ、iOS、Android）によって違いすぎるので『#』を削って通常の文字列にしておく
+                        var shareURL = "https://www.threads.net/intent/post?text=" + encodeURIComponent(postText + "\n\n" + postTags.replace(/#/g, "")) + "&url=" + encodeURIComponent(postURL);
+                        window.open(shareURL);
+                    };
+                    this.bskyButton.onclick = function () {
+                        // https://docs.bsky.app/docs/advanced-guides/intent-links
+                        var shareURL = "https://bsky.app/intent/compose?text=" + encodeURIComponent(postText + "\n" + postTags + "\n" + postURL);
+                        window.open(shareURL);
+                    };
+                }
             }
             this.buttonAlpha += 0.05;
             if (this.buttonAlpha > 1.0) {
                 this.buttonAlpha = 1.0;
             }
-            this.tweetButton.alpha = this.buttonAlpha;
+            this.xButton.alpha = this.buttonAlpha;
+            this.threadsButton.alpha = this.buttonAlpha;
+            this.bskyButton.alpha = this.buttonAlpha;
             this.restartButton.alpha = this.buttonAlpha;
             if (this.buttonAlpha > 0.7) {
-                this.tweetButton.wakeUp();
+                this.xButton.wakeUp();
+                this.threadsButton.wakeUp();
+                this.bskyButton.wakeUp();
                 this.restartButton.wakeUp();
             }
         }
