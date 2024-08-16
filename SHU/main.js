@@ -455,7 +455,7 @@ phina.define("GameScene", {
             fontSize: 32,
             fontFamily: "icomoon",
             fill: "#7575EF",
-            x: SCREEN_CENTER_X - 160 - 76,
+            x: SCREEN_CENTER_X - 160 - 88,
             y: 580,
             cornerRadius: 8,
             width: 60,
@@ -494,14 +494,14 @@ phina.define("GameScene", {
             fontSize: 32,
             fontFamily: "icomoon",
             fill: "#7575EF",
-            x: SCREEN_CENTER_X - 160 + 76,
+            x: SCREEN_CENTER_X - 160 + 88,
             y: 580,
             cornerRadius: 8,
             width: 60,
         }).addChildTo(group2);
         this.bskyButton.onclick = function () {
             // https://docs.bsky.app/docs/advanced-guides/intent-links
-            let shareURL = "https://bsky.app/intent/compose?text=" + encodeURIComponent((postText + "\n" + postTags + "\n" + postURL).replace(/\n/g, "<br>"));
+            let shareURL = "https://bsky.app/intent/compose?text=" + encodeURIComponent(postText + "\n" + postTags + "\n" + postURL);
             window.open(shareURL);
         };
         this.bskyButton.alpha = 0.0;
