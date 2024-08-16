@@ -211,6 +211,11 @@ var totalFrame = 0;
 var totalSec = 0;
 var fitWindowTimer = 0;
 
+// 共有ボタン用
+let postText = null;
+const postURL = "https://iwasaku.github.io/test3/SHU/";
+const postTags = "#ネムレス #NEMLESSS";
+
 phina.main(function () {
     var app = GameApp({
         startLabel: 'logo',
@@ -443,6 +448,8 @@ phina.define("GameScene", {
             x: SCREEN_CENTER_X,
             y: SCREEN_CENTER_Y + 80,
         }).addChildTo(group2);
+
+        // X
         this.xButton = Button({
             text: String.fromCharCode(0xe902),
             fontSize: 32,
@@ -453,7 +460,15 @@ phina.define("GameScene", {
             cornerRadius: 8,
             width: 60,
         }).addChildTo(group2);
+        this.xButton.onclick = function () {
+            // https://developer.x.com/en/docs/twitter-for-websites/tweet-button/guides/web-intent
+            let shareURL = "https://x.com/intent/tweet?text=" + encodeURIComponent(postText + "\n" + postTags + "\n") + "&url=" + encodeURIComponent(postURL);
+            window.open(shareURL);
+        };
         this.xButton.alpha = 0.0;
+        this.xButton.sleep();
+
+        // threads
         this.threadsButton = Button({
             text: String.fromCharCode(0xe901),
             fontSize: 32,
@@ -464,7 +479,16 @@ phina.define("GameScene", {
             cornerRadius: 8,
             width: 60,
         }).addChildTo(group2);
+        this.threadsButton.onclick = function () {
+            // https://developers.facebook.com/docs/threads/threads-web-intents/
+            // web intentでのハッシュタグの扱いが環境（ブラウザ、iOS、Android）によって違いすぎるので『#』を削って通常の文字列にしておく
+            let shareURL = "https://www.threads.net/intent/post?text=" + encodeURIComponent(postText + "\n\n" + postTags.replace(/#/g, "")) + "&url=" + encodeURIComponent(postURL);
+            window.open(shareURL);
+        };
         this.threadsButton.alpha = 0.0;
+        this.threadsButton.sleep();
+
+        // bluesky
         this.bskyButton = Button({
             text: String.fromCharCode(0xe900),
             fontSize: 32,
@@ -475,7 +499,13 @@ phina.define("GameScene", {
             cornerRadius: 8,
             width: 60,
         }).addChildTo(group2);
+        this.bskyButton.onclick = function () {
+            // https://docs.bsky.app/docs/advanced-guides/intent-links
+            let shareURL = "https://bsky.app/intent/compose?text=" + encodeURIComponent((postText + "\n" + postTags + "\n" + postURL).replace(/\n/g, "<br>"));
+            window.open(shareURL);
+        };
         this.bskyButton.alpha = 0.0;
+        this.bskyButton.sleep();
 
         this.restartButton = Button({
             text: "RESTART",
@@ -542,9 +572,6 @@ phina.define("GameScene", {
 
         var self = this;
 
-        this.xButton.sleep();
-        this.threadsButton.sleep();
-        this.bskyButton.sleep();
 
         this.restartButton.sleep();
         this.restartButton.onpointstart = function () {
@@ -695,27 +722,7 @@ phina.define("GameScene", {
                 this.downButton.sleep();
                 this.aButton.sleep();
 
-                {
-                    var postText = "SHRKN NG-NG\nスコア: " + this.nowScoreLabel.text;
-                    var postURL = "https://iwasaku.github.io/test3/SHU/";
-                    var postTags = "#ネムレス #NEMLESSS";
-                    this.xButton.onclick = function () {
-                        // https://developer.x.com/en/docs/twitter-for-websites/tweet-button/guides/web-intent
-                        var shareURL = "https://x.com/intent/tweet?text=" + encodeURIComponent(postText + "\n" + postTags + "\n") + "&url=" + encodeURIComponent(postURL);
-                        window.open(shareURL);
-                    };
-                    this.threadsButton.onclick = function () {
-                        // https://developers.facebook.com/docs/threads/threads-web-intents/
-                        // web intentでのハッシュタグの扱いが環境（ブラウザ、iOS、Android）によって違いすぎるので『#』を削って通常の文字列にしておく
-                        var shareURL = "https://www.threads.net/intent/post?text=" + encodeURIComponent(postText + "\n\n" + postTags.replace(/#/g, "")) + "&url=" + encodeURIComponent(postURL);
-                        window.open(shareURL);
-                    };
-                    this.bskyButton.onclick = function () {
-                        // https://docs.bsky.app/docs/advanced-guides/intent-links
-                        var shareURL = "https://bsky.app/intent/compose?text=" + encodeURIComponent(postText + "\n" + postTags + "\n" + postURL);
-                        window.open(shareURL);
-                    };
-                }
+                postText = "SHRKN NG-NG\nスコア: " + this.nowScoreLabel.text;
             }
             this.buttonAlpha += 0.05;
             if (this.buttonAlpha > 1.0) {
